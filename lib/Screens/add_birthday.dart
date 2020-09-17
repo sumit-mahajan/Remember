@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'birthday_page.dart';
 import 'package:intl/intl.dart';
+
+import 'birthday_page.dart';
+
 import '../Utilities/store_birthday.dart';
 import '../Utilities/db_manager.dart';
+import '../Utilities/NotificationsPlugin.dart';
 
 class Addbirthday extends StatefulWidget {
   static const id = 'add_birthday';
@@ -17,6 +20,13 @@ class _AddbirthdayState extends State<Addbirthday> {
   DateTime birthdate;
   var formatter = new DateFormat('yyyy-MM-dd');
   DbManager dbmanager = new DbManager();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    notificationPlugin.setOnNotificationClick(onNotificationClick);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,8 +154,9 @@ class _AddbirthdayState extends State<Addbirthday> {
                             .insertBirthday(StoreBirthday(
                                 name: name,
                                 dateString: birthdate.toIso8601String()))
-                            .then((id) {
-                          print('Birthday added at $id');
+                            .then((id) async {
+                          await notificationPlugin.scheduleNotification(
+                              id, birthdate, name, true);
                         });
 
                         Navigator.pushNamed(context, Birthday.id);
@@ -159,5 +170,9 @@ class _AddbirthdayState extends State<Addbirthday> {
         ),
       ),
     );
+  }
+
+  onNotificationClick(String payload) {
+    print(payload);
   }
 }

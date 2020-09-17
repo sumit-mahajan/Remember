@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flare_flutter/flare_actor.dart';
+
 import './Screens/todo_page.dart';
 import './Screens/notes_page.dart';
 import './Screens/birthday_page.dart';
@@ -20,8 +22,11 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFFFFFFFF),
         canvasColor: Colors.transparent,
       ),
-      initialRoute: ToDo.id,
+      initialRoute: "0",
       routes: {
+        "0": (context) {
+          return SplashScr();
+        },
         ToDo.id: (context) {
           return ToDo();
         },
@@ -41,6 +46,32 @@ class MyApp extends StatelessWidget {
           return CalendarApp();
         },
       },
+    );
+  }
+}
+
+class SplashScr extends StatefulWidget {
+  @override
+  _SplashScrState createState() => _SplashScrState();
+}
+
+class _SplashScrState extends State<SplashScr> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.pushNamed(context, ToDo.id);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FlareActor("assets/check.flr",
+          alignment: Alignment.center,
+          fit: BoxFit.contain,
+          animation: "Untitled"),
     );
   }
 }
