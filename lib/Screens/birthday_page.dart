@@ -216,14 +216,8 @@ class _BirthdayState extends State<Birthday> {
                                 padding: const EdgeInsets.only(top: 4.0),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15.0),
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Color(0xFFF6A315),
-                                          Color(0xFFFE636B),
-                                        ],
-                                        stops: [0.0, 0.9],
-                                      )),
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
                                   child: ListTile(
                                     leading: ClipOval(
                                       child: Material(
