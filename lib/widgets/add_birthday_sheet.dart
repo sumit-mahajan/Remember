@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:remember/models/birthday_model.dart';
+import 'package:remember/screens/birthdays_tab_screen.dart';
+import 'package:remember/services/notifications_service.dart';
+import 'package:remember/services/database_service.dart';
 
-import 'birthday_page.dart';
-
-import '../Utilities/store_birthday.dart';
-import '../Utilities/db_manager.dart';
-import '../Utilities/NotificationsPlugin.dart';
-
-class Addbirthday extends StatefulWidget {
+class AddbirthdaySheet extends StatefulWidget {
   static const id = 'add_birthday';
 
   @override
-  _AddbirthdayState createState() => _AddbirthdayState();
+  _AddbirthdaySheetState createState() => _AddbirthdaySheetState();
 }
 
-class _AddbirthdayState extends State<Addbirthday> {
+class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
   final formKey = GlobalKey<FormState>();
   String name;
   DateTime birthdate;
@@ -23,7 +21,6 @@ class _AddbirthdayState extends State<Addbirthday> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     notificationPlugin.setOnNotificationClick(onNotificationClick);
   }
@@ -151,7 +148,7 @@ class _AddbirthdayState extends State<Addbirthday> {
                       formKey.currentState.save();
                       if (birthdate != null) {
                         dbmanager
-                            .insertBirthday(StoreBirthday(
+                            .insertBirthday(BirthdayModel(
                                 name: name,
                                 dateString: birthdate.toIso8601String()))
                             .then((id) async {
@@ -159,7 +156,7 @@ class _AddbirthdayState extends State<Addbirthday> {
                               id, birthdate, name, true);
                         });
 
-                        Navigator.pushNamed(context, Birthday.id);
+                        Navigator.pushNamed(context, BirthdayTab.id);
                       }
                     }
                   },

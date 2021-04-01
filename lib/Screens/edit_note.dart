@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'todo_page.dart';
-import 'notes_page.dart';
-import 'birthday_page.dart';
-import '../Utilities/constants.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/services.dart';
-import 'calendar_page.dart';
-import '../Utilities/db_manager.dart';
-import 'add_notes.dart';
+import 'package:remember/Utilities/constants.dart';
+
+import 'package:remember/services/database_service.dart';
+import 'package:remember/models/note_model.dart';
+
+import 'package:remember/screens/birthdays_tab_screen.dart';
+import 'package:remember/screens/events_tab_screen.dart';
+import 'package:remember/screens/notes_tab_screen.dart';
+import 'package:remember/screens/todo_tab_screen.dart';
 
 class EditNote extends StatelessWidget {
   static const id = 'edit_note';
-  StoreNote editnote;
+  NoteModel editnote;
   DbManager dbmanager = new DbManager();
 
   EditNote({@required this.editnote});
@@ -55,7 +57,7 @@ class EditNote extends StatelessWidget {
                       dbmanager.updateNote(editnote).then((id) => {
                             print('Note updated at $id'),
                           });
-                      Navigator.pushNamed(context, Note.id);
+                      Navigator.pushNamed(context, NotesTab.id);
                     }
                   },
                 ),
@@ -82,16 +84,16 @@ class EditNote extends StatelessWidget {
           onTap: (index) {
             switch (index) {
               case 0:
-                Navigator.pushNamed(context, ToDo.id);
+                Navigator.pushNamed(context, ToDoTab.id);
                 break;
               case 1:
                 Navigator.pop(context);
                 break;
               case 2:
-                Navigator.pushNamed(context, Birthday.id);
+                Navigator.pushNamed(context, BirthdayTab.id);
                 break;
               case 3:
-                Navigator.pushNamed(context, CalendarApp.id);
+                Navigator.pushNamed(context, EventsTab.id);
                 break;
             }
           },
@@ -119,7 +121,7 @@ class EditNote extends StatelessWidget {
           dbmanager.updateNote(editnote).then((id) => {
                 print('Note updated at $id'),
               });
-          Navigator.pushNamed(context, Note.id);
+          Navigator.pushNamed(context, NotesTab.id);
         } else {
           Navigator.pop(context);
         }

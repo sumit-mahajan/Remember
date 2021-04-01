@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flare_flutter/flare_actor.dart';
 
-import './Screens/todo_page.dart';
-import './Screens/notes_page.dart';
-import './Screens/birthday_page.dart';
-import './Screens/add_birthday.dart';
-import './Screens/add_notes.dart';
-import './Screens/calendar_page.dart';
+import 'package:remember/Screens/add_note_screen.dart';
+import 'package:remember/screens/birthdays_tab_screen.dart';
+import 'package:remember/screens/events_tab_screen.dart';
+import 'package:remember/screens/notes_tab_screen.dart';
+import 'package:remember/screens/todo_tab_screen.dart';
+import 'package:remember/widgets/add_birthday_sheet.dart';
 
 void main() {
   runApp(MyApp());
@@ -22,56 +21,27 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFFFFFFFF),
         canvasColor: Colors.transparent,
       ),
-      initialRoute: "0",
+      initialRoute: ToDoTab.id,
       routes: {
-        "0": (context) {
-          return SplashScr();
+        ToDoTab.id: (context) {
+          return ToDoTab();
         },
-        ToDo.id: (context) {
-          return ToDo();
+        NotesTab.id: (context) {
+          return NotesTab();
         },
-        Note.id: (context) {
-          return Note();
+        BirthdayTab.id: (context) {
+          return BirthdayTab();
         },
-        Birthday.id: (context) {
-          return Birthday();
+        AddbirthdaySheet.id: (context) {
+          return AddbirthdaySheet();
         },
-        Addbirthday.id: (context) {
-          return Addbirthday();
+        AddNoteScreen.id: (context) {
+          return AddNoteScreen();
         },
-        AddNote.id: (context) {
-          return AddNote();
-        },
-        CalendarApp.id: (context) {
-          return CalendarApp();
+        EventsTab.id: (context) {
+          return EventsTab();
         },
       },
-    );
-  }
-}
-
-class SplashScr extends StatefulWidget {
-  @override
-  _SplashScrState createState() => _SplashScrState();
-}
-
-class _SplashScrState extends State<SplashScr> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    Future.delayed(Duration(seconds: 2), () {
-      Navigator.pushNamed(context, ToDo.id);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: FlareActor("assets/check.flr",
-          alignment: Alignment.center,
-          fit: BoxFit.contain,
-          animation: "Untitled"),
     );
   }
 }

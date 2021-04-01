@@ -4,20 +4,20 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-import 'todo_page.dart';
-import 'birthday_page.dart';
-import 'notes_page.dart';
+import 'package:remember/services/notifications_service.dart';
+import 'package:remember/utilities/constants.dart';
 
-import '../Utilities/constants.dart';
-import '../Utilities/NotificationsPlugin.dart';
+import 'package:remember/screens/birthdays_tab_screen.dart';
+import 'package:remember/screens/notes_tab_screen.dart';
+import 'package:remember/screens/todo_tab_screen.dart';
 
-class CalendarApp extends StatefulWidget {
+class EventsTab extends StatefulWidget {
   static const id = 'calendar_page';
   @override
-  _CalendarAppState createState() => _CalendarAppState();
+  _EventsTabState createState() => _EventsTabState();
 }
 
-class _CalendarAppState extends State<CalendarApp> {
+class _EventsTabState extends State<EventsTab> {
   CalendarController _controller;
   Map<DateTime, List<dynamic>> _events;
   List<dynamic> _selectedEvents;
@@ -145,13 +145,13 @@ class _CalendarAppState extends State<CalendarApp> {
           onTap: (index) {
             switch (index) {
               case 0:
-                Navigator.pushNamed(context, ToDo.id);
+                Navigator.pushNamed(context, ToDoTab.id);
                 break;
               case 1:
-                Navigator.pushNamed(context, Note.id);
+                Navigator.pushNamed(context, NotesTab.id);
                 break;
               case 2:
-                Navigator.pushNamed(context, Birthday.id);
+                Navigator.pushNamed(context, BirthdayTab.id);
                 break;
             }
           },

@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:remember/models/birthday_model.dart';
 
-import 'todo_page.dart';
-import 'notes_page.dart';
-import 'add_birthday.dart';
-import 'calendar_page.dart';
+import 'package:remember/services/notifications_service.dart';
+import 'package:remember/utilities/constants.dart';
+import 'package:remember/services/database_service.dart';
 
-import '../Utilities/db_manager.dart';
-import '../Utilities/store_birthday.dart';
-import '../Utilities/constants.dart';
-import '../Utilities/NotificationsPlugin.dart';
+import 'package:remember/widgets/add_birthday_sheet.dart';
+import 'package:remember/screens/events_tab_screen.dart';
+import 'package:remember/screens/notes_tab_screen.dart';
+import 'package:remember/screens/todo_tab_screen.dart';
 
-class Birthday extends StatefulWidget {
+class BirthdayTab extends StatefulWidget {
   static const id = 'birthdays_page';
 
   @override
-  _BirthdayState createState() => _BirthdayState();
+  _BirthdayTabState createState() => _BirthdayTabState();
 }
 
-class _BirthdayState extends State<Birthday> {
-  List<StoreBirthday> birthList = [];
-  List<StoreBirthday> todayList = [];
-  List<StoreBirthday> laterBirthList = [];
+class _BirthdayTabState extends State<BirthdayTab> {
+  List<BirthdayModel> birthList = [];
+  List<BirthdayModel> todayList = [];
+  List<BirthdayModel> laterBirthList = [];
   var formatter = new DateFormat('dd-MM-yyyy');
   List<Padding> laterWidgets = [];
   List<int> _selectedIndexList = List();
@@ -31,7 +31,6 @@ class _BirthdayState extends State<Birthday> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     notificationPlugin.setOnNotificationClick(onNotificationClick);
   }
@@ -79,7 +78,7 @@ class _BirthdayState extends State<Birthday> {
             ),
             onPressed: () {
               showModalBottomSheet(
-                  context: context, builder: (context) => Addbirthday());
+                  context: context, builder: (context) => AddbirthdaySheet());
             }),
         bottomNavigationBar: CurvedNavigationBar(
           height: 50.0,
@@ -103,13 +102,13 @@ class _BirthdayState extends State<Birthday> {
           onTap: (index) {
             switch (index) {
               case 0:
-                Navigator.pushNamed(context, ToDo.id);
+                Navigator.pushNamed(context, ToDoTab.id);
                 break;
               case 1:
-                Navigator.pushNamed(context, Note.id);
+                Navigator.pushNamed(context, NotesTab.id);
                 break;
               case 3:
-                Navigator.pushNamed(context, CalendarApp.id);
+                Navigator.pushNamed(context, EventsTab.id);
                 break;
             }
           },

@@ -1,28 +1,19 @@
 import 'package:flutter/material.dart';
-import 'todo_page.dart';
-import 'notes_page.dart';
-import 'birthday_page.dart';
-import '../Utilities/constants.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/services.dart';
-import 'calendar_page.dart';
-import '../Utilities/db_manager.dart';
 
-class StoreNote {
-  int id;
-  String content;
+import 'package:remember/utilities/constants.dart';
+import 'package:remember/services/database_service.dart';
+import 'package:remember/models/note_model.dart';
 
-  StoreNote({this.id, this.content});
+import 'package:remember/screens/birthdays_tab_screen.dart';
+import 'package:remember/screens/events_tab_screen.dart';
+import 'package:remember/screens/notes_tab_screen.dart';
+import 'package:remember/screens/todo_tab_screen.dart';
 
-  Map<String, dynamic> toMap() {
-    var map = {'content': this.content};
-    return map;
-  }
-}
-
-class AddNote extends StatelessWidget {
+class AddNoteScreen extends StatelessWidget {
   static const id = 'add_note';
-  StoreNote newNote = StoreNote(content: '');
+  NoteModel newNote = NoteModel(content: '');
   DbManager dbmanager = new DbManager();
   @override
   Widget build(BuildContext context) {
@@ -64,7 +55,7 @@ class AddNote extends StatelessWidget {
                       dbmanager.insertNote(newNote).then((id) => {
                             print('Note added at $id'),
                           });
-                      Navigator.pushNamed(context, Note.id);
+                      Navigator.pushNamed(context, NotesTab.id);
                     }
                   },
                 ),
@@ -91,16 +82,16 @@ class AddNote extends StatelessWidget {
           onTap: (index) {
             switch (index) {
               case 0:
-                Navigator.pushNamed(context, ToDo.id);
+                Navigator.pushNamed(context, ToDoTab.id);
                 break;
               case 1:
                 Navigator.pop(context);
                 break;
               case 2:
-                Navigator.pushNamed(context, Birthday.id);
+                Navigator.pushNamed(context, BirthdayTab.id);
                 break;
               case 3:
-                Navigator.pushNamed(context, CalendarApp.id);
+                Navigator.pushNamed(context, EventsTab.id);
                 break;
             }
           },
@@ -128,7 +119,7 @@ class AddNote extends StatelessWidget {
           dbmanager.insertNote(newNote).then((id) => {
                 print('Note added at $id'),
               });
-          Navigator.pushNamed(context, Note.id);
+          Navigator.pushNamed(context, NotesTab.id);
         } else {
           Navigator.pop(context);
         }

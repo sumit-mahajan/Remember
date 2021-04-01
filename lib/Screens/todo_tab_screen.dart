@@ -4,43 +4,43 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'notes_page.dart';
-import 'birthday_page.dart';
-import 'calendar_page.dart';
+import 'package:remember/services/notifications_service.dart';
+import 'package:remember/utilities/constants.dart';
+import 'package:remember/services/database_service.dart';
+import 'package:remember/models/todo_model.dart';
+import 'package:remember/utilities/quotes.dart';
+import 'package:remember/widgets/reusable_card.dart';
 
-import '../Utilities/constants.dart';
-import '../Utilities/reusable_card.dart';
-import '../Utilities/items.dart';
-import '../Utilities/quotes.dart';
-import '../Utilities/db_manager.dart';
-import '../Utilities/NotificationsPlugin.dart';
+import 'package:remember/screens/birthdays_tab_screen.dart';
+import 'package:remember/screens/events_tab_screen.dart';
+import 'package:remember/screens/notes_tab_screen.dart';
 
 var random = new Random();
 String quoteText;
 String author;
 
-class ToDo extends StatefulWidget {
+class ToDoTab extends StatefulWidget {
   AnimationController progressController;
   Animation animation;
   static const id = 'to_do_page';
 
   @override
-  _ToDoState createState() => _ToDoState();
+  _ToDoTabState createState() => _ToDoTabState();
 }
 
-class _ToDoState extends State<ToDo> {
+class _ToDoTabState extends State<ToDoTab> {
   bool visibleTextField = false;
   String newtask = '';
   DbManager dbmanager = new DbManager();
   final _itemcontroller = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  List<TodoItem> itemList = [];
+  List<TodoModel> itemList = [];
   int countDone = 0;
-  TodoItem deletedItem;
+  TodoModel deletedItem;
   int totaltasks = 0;
 
   Future getItemList() async {
-    List<TodoItem> tp = await dbmanager.getToDoList();
+    List<TodoModel> tp = await dbmanager.getToDoList();
     setState(() {
       totaltasks = tp.length;
       countDone = getDoneCount(tp);
@@ -75,7 +75,7 @@ class _ToDoState extends State<ToDo> {
     notificationPlugin.setOnNotificationClick(onNotificationClick);
   }
 
-  int getDoneCount(List<TodoItem> itemList) {
+  int getDoneCount(List<TodoModel> itemList) {
     countDone = 0;
     if (itemList != null) {
       for (int i = 0; i < itemList.length; i++) {
@@ -109,13 +109,13 @@ class _ToDoState extends State<ToDo> {
           onTap: (index) {
             switch (index) {
               case 1:
-                Navigator.pushNamed(context, Note.id);
+                Navigator.pushNamed(context, NotesTab.id);
                 break;
               case 2:
-                Navigator.pushNamed(context, Birthday.id);
+                Navigator.pushNamed(context, BirthdayTab.id);
                 break;
               case 3:
-                Navigator.pushNamed(context, CalendarApp.id);
+                Navigator.pushNamed(context, EventsTab.id);
                 break;
             }
           },
@@ -195,7 +195,9 @@ class _ToDoState extends State<ToDo> {
                       radius: 100.0,
                       lineWidth: 13.0,
                       percent: totaltasks > 0
-                          ? countDone == null ? 0 : countDone / totaltasks
+                          ? countDone == null
+                              ? 0
+                              : countDone / totaltasks
                           : 0.0,
                       center: Text(countDone.toString() +
                           ' / ' +
@@ -280,9 +282,9 @@ class _ToDoState extends State<ToDo> {
                                   itemCount:
                                       itemList == null ? 0 : itemList.length,
                                   itemBuilder: (context, i) {
-                                    final TodoItem currentitem = itemList[i];
+                                    final TodoModel currentitem = itemList[i];
                                     return Dismissible(
-                                      key: Key(currentitem.item),
+                                      key: Key(currentitem.name),
                                       confirmDismiss: (dir) {
                                         setState(
                                           () {
@@ -385,7 +387,7 @@ class _ToDoState extends State<ToDo> {
                                                 ],
                                               ),
                                               Text(
-                                                currentitem.item,
+                                                currentitem.name,
                                                 style: TextStyle(
                                                   fontSize: 18.0,
                                                   decoration: itemList[i].done
@@ -509,7 +511,7 @@ class _ToDoState extends State<ToDo> {
   void _addTask(BuildContext context) {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
-      TodoItem newItem = TodoItem(item: _itemcontroller.text, done: false);
+      TodoModel newItem = TodoModel(name: _itemcontroller.text, done: false);
       dbmanager.insertToDo(newItem).then((id) => {
             _itemcontroller.clear(),
           });

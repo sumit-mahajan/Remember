@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import '../Utilities/constants.dart';
-import 'todo_page.dart';
-import 'birthday_page.dart';
-import 'add_notes.dart';
-import 'calendar_page.dart';
-import '../Utilities/db_manager.dart';
-import 'edit_note.dart';
+import 'package:remember/models/note_model.dart';
 
-class Note extends StatefulWidget {
+import 'package:remember/utilities/constants.dart';
+import 'package:remember/services/database_service.dart';
+
+import 'package:remember/screens/add_note_screen.dart';
+import 'package:remember/screens/birthdays_tab_screen.dart';
+import 'package:remember/screens/events_tab_screen.dart';
+import 'package:remember/screens/todo_tab_screen.dart';
+import 'package:remember/screens/edit_note.dart';
+
+class NotesTab extends StatefulWidget {
   static const id = 'notes_page';
   @override
-  _NoteState createState() => _NoteState();
+  _NotesTabState createState() => _NotesTabState();
 }
 
-class _NoteState extends State<Note> {
+class _NotesTabState extends State<NotesTab> {
   List<int> _selectedIndexList = List();
   bool _selectionMode = false;
-  List<StoreNote> notes = [];
+  List<NoteModel> notes = [];
   DbManager dbmanager = new DbManager();
 
   void _changeSelection({bool enable, int index}) {
@@ -42,7 +45,7 @@ class _NoteState extends State<Note> {
               size: 30.0,
             ),
             onPressed: () {
-              Navigator.pushNamed(context, AddNote.id);
+              Navigator.pushNamed(context, AddNoteScreen.id);
             }),
         bottomNavigationBar: CurvedNavigationBar(
           height: 50.0,
@@ -63,13 +66,13 @@ class _NoteState extends State<Note> {
           onTap: (index) {
             switch (index) {
               case 0:
-                Navigator.pushNamed(context, ToDo.id);
+                Navigator.pushNamed(context, ToDoTab.id);
                 break;
               case 2:
-                Navigator.pushNamed(context, Birthday.id);
+                Navigator.pushNamed(context, BirthdayTab.id);
                 break;
               case 3:
-                Navigator.pushNamed(context, CalendarApp.id);
+                Navigator.pushNamed(context, EventsTab.id);
                 break;
             }
           },
