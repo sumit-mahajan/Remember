@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:remember/models/birthday_model.dart';
-import 'package:remember/screens/birthdays_tab_screen.dart';
+import 'package:remember/screens/tabs_screen.dart';
 import 'package:remember/services/notifications_service.dart';
 import 'package:remember/services/database_service.dart';
 
@@ -156,7 +156,14 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
                               id, birthdate, name, true);
                         });
 
-                        Navigator.pushNamed(context, BirthdayTab.id);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => TabsScreen(
+                              preSelected: 2,
+                            ),
+                          ),
+                        );
                       }
                     }
                   },

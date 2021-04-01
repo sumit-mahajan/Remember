@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -7,12 +6,8 @@ import 'dart:convert';
 import 'package:remember/services/notifications_service.dart';
 import 'package:remember/utilities/constants.dart';
 
-import 'package:remember/screens/birthdays_tab_screen.dart';
-import 'package:remember/screens/notes_tab_screen.dart';
-import 'package:remember/screens/todo_tab_screen.dart';
-
 class EventsTab extends StatefulWidget {
-  static const id = 'calendar_page';
+  //static const id = 'calendar_page';
   @override
   _EventsTabState createState() => _EventsTabState();
 }
@@ -33,6 +28,10 @@ class _EventsTabState extends State<EventsTab> {
     _selectedEvents = [];
     initPrefs();
     notificationPlugin.setOnNotificationClick(onNotificationClick);
+  }
+
+  onNotificationClick(String payload) {
+    print(payload);
   }
 
   initPrefs() async {
@@ -120,193 +119,156 @@ class _EventsTabState extends State<EventsTab> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
-      child: Scaffold(
-        backgroundColor: Color(0xFF5F35FE),
-        bottomNavigationBar: CurvedNavigationBar(
-          height: 50.0,
-          backgroundColor: Colors.white,
-          buttonBackgroundColor: Color(0xFF5F35FE),
-          color: Color(0xFFeff2f9),
-          index: 3,
-          items: <Widget>[
-            Icon(Icons.check_circle_outline, size: 30),
-            Icon(Icons.event_note, size: 30),
-            Icon(Icons.card_giftcard, size: 30),
-            Icon(
-              Icons.calendar_today,
-              size: 30,
-              color: Colors.white,
-            ),
-          ],
-          onTap: (index) {
-            switch (index) {
-              case 0:
-                Navigator.pushNamed(context, ToDoTab.id);
-                break;
-              case 1:
-                Navigator.pushNamed(context, NotesTab.id);
-                break;
-              case 2:
-                Navigator.pushNamed(context, BirthdayTab.id);
-                break;
-            }
-          },
-          animationDuration: Duration(
-            milliseconds: 200,
-          ),
-          animationCurve: Curves.bounceInOut,
-        ),
-        body: ListView(children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: Center(
-              child: Text(
-                'Calendar',
+    return ListView(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: 30.0,
+              ),
+              Text(
+                'Events',
                 style: titleTextStyle,
               ),
-            ),
+              GestureDetector(
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 30.0,
+                ),
+                onTap: _showAddDialog,
+              )
+            ],
           ),
-          Container(
-            height: MediaQuery.of(context).size.height - 140.0,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(25.0),
-                  topRight: Radius.circular(25.0)),
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  TableCalendar(
-                    events: _events,
-                    calendarStyle: CalendarStyle(
-                      canEventMarkersOverflow: true,
-                    ),
-                    headerStyle: HeaderStyle(
-                      centerHeaderTitle: true,
-                      formatButtonDecoration: BoxDecoration(
-                        color: Color(0xFF5B84FF),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      formatButtonTextStyle: TextStyle(color: Colors.white),
-                      formatButtonShowsNext: false,
-                    ),
-                    onDaySelected: (date, events) {
-                      setState(() {
-                        _selectedEvents = events;
-                      });
-                    },
-                    builders: CalendarBuilders(
-                      selectedDayBuilder: (context, date, events) => Container(
-                          margin: const EdgeInsets.all(4.0),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              color: Color(0xFF5B84FF),
-                              borderRadius: BorderRadius.circular(10.0)),
-                          child: Text(
-                            date.day.toString(),
-                            style: TextStyle(color: Colors.white),
-                          )),
-                      todayDayBuilder: (context, date, events) => Container(
-                          margin: const EdgeInsets.all(4.0),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              color: Colors.lightBlueAccent,
-                              borderRadius: BorderRadius.circular(10.0)),
-                          child: Text(
-                            date.day.toString(),
-                            style: TextStyle(color: Colors.white),
-                          )),
-                    ),
-                    calendarController: _controller,
+        ),
+        Container(
+          height: MediaQuery.of(context).size.height - 140.0,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25.0),
+                topRight: Radius.circular(25.0)),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                TableCalendar(
+                  events: _events,
+                  calendarStyle: CalendarStyle(
+                    canEventMarkersOverflow: true,
                   ),
-                  _selectedEvents != null
-                      ? _selectedEvents.length != 0
-                          ? Column(
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Text(
-                                    'Events',
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                                ListView.builder(
-                                    scrollDirection: Axis.vertical,
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemCount: _selectedEvents.length,
-                                    itemBuilder: (context, i) {
-                                      dynamic currentEvent = _selectedEvents[i];
-                                      return ListTile(
-                                        title: Text(currentEvent),
-                                        trailing: IconButton(
-                                            icon: Icon(
-                                              Icons.delete_outline,
-                                              color: Colors.red,
-                                            ),
-                                            onPressed: () async {
-                                              setState(() {
-                                                _events[_controller.selectedDay]
-                                                    .removeAt(i);
-                                                prefs.setString(
-                                                    "events",
-                                                    json.encode(
-                                                        encodeMap(_events)));
-                                              });
-                                              if (_events[_controller
-                                                              .selectedDay]
-                                                          .length ==
-                                                      0 &&
-                                                  DateTime.now().isBefore(
-                                                      _controller
-                                                          .selectedDay)) {
-                                                DateTime eDate =
-                                                    _controller.selectedDay;
-                                                int id = (eDate.day * 100 +
-                                                            eDate.month) *
-                                                        10000 +
-                                                    eDate.year;
-                                                await notificationPlugin
-                                                    .cancelNotification(id);
-                                              }
-                                            }),
-                                      );
-                                    }),
-                              ],
-                            )
-                          : Center(
-                              child: Padding(
+                  headerStyle: HeaderStyle(
+                    centerHeaderTitle: true,
+                    formatButtonDecoration: BoxDecoration(
+                      color: Color(0xFF5B84FF),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    formatButtonTextStyle: TextStyle(color: Colors.white),
+                    formatButtonShowsNext: false,
+                  ),
+                  onDaySelected: (date, events) {
+                    setState(() {
+                      _selectedEvents = events;
+                    });
+                  },
+                  builders: CalendarBuilders(
+                    selectedDayBuilder: (context, date, events) => Container(
+                        margin: const EdgeInsets.all(4.0),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: Color(0xFF5B84FF),
+                            borderRadius: BorderRadius.circular(10.0)),
+                        child: Text(
+                          date.day.toString(),
+                          style: TextStyle(color: Colors.white),
+                        )),
+                    todayDayBuilder: (context, date, events) => Container(
+                        margin: const EdgeInsets.all(4.0),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: Colors.lightBlueAccent,
+                            borderRadius: BorderRadius.circular(10.0)),
+                        child: Text(
+                          date.day.toString(),
+                          style: TextStyle(color: Colors.white),
+                        )),
+                  ),
+                  calendarController: _controller,
+                ),
+                _selectedEvents != null
+                    ? _selectedEvents.length != 0
+                        ? Column(
+                            children: <Widget>[
+                              Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Text(
-                                  'No Events',
-                                  style: greetTextStyle,
+                                  'Events',
+                                  style: TextStyle(
+                                      fontSize: 22.0,
+                                      fontWeight: FontWeight.w500),
                                 ),
                               ),
-                            )
-                      : Container(),
-                ],
-              ),
+                              ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: _selectedEvents.length,
+                                  itemBuilder: (context, i) {
+                                    dynamic currentEvent = _selectedEvents[i];
+                                    return ListTile(
+                                      title: Text(currentEvent),
+                                      trailing: IconButton(
+                                          icon: Icon(
+                                            Icons.delete_outline,
+                                            color: Colors.red,
+                                          ),
+                                          onPressed: () async {
+                                            setState(() {
+                                              _events[_controller.selectedDay]
+                                                  .removeAt(i);
+                                              prefs.setString(
+                                                  "events",
+                                                  json.encode(
+                                                      encodeMap(_events)));
+                                            });
+                                            if (_events[_controller.selectedDay]
+                                                        .length ==
+                                                    0 &&
+                                                DateTime.now().isBefore(
+                                                    _controller.selectedDay)) {
+                                              DateTime eDate =
+                                                  _controller.selectedDay;
+                                              int id = (eDate.day * 100 +
+                                                          eDate.month) *
+                                                      10000 +
+                                                  eDate.year;
+                                              await notificationPlugin
+                                                  .cancelNotification(id);
+                                            }
+                                          }),
+                                    );
+                                  }),
+                            ],
+                          )
+                        : Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Text(
+                                'No Events',
+                                style: greetTextStyle,
+                              ),
+                            ),
+                          )
+                    : Container(),
+              ],
             ),
           ),
-        ]),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xFF5B84FF),
-          child: Icon(Icons.add),
-          onPressed: _showAddDialog,
         ),
-      ),
+      ],
     );
-  }
-
-  onNotificationClick(String payload) {
-    print(payload);
   }
 }

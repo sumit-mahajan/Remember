@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:remember/Screens/add_note_screen.dart';
-import 'package:remember/screens/birthdays_tab_screen.dart';
-import 'package:remember/screens/events_tab_screen.dart';
-import 'package:remember/screens/notes_tab_screen.dart';
-import 'package:remember/screens/todo_tab_screen.dart';
+import 'package:remember/screens/tabs_screen.dart';
 import 'package:remember/widgets/add_birthday_sheet.dart';
 
 void main() {
@@ -21,25 +18,16 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFFFFFFFF),
         canvasColor: Colors.transparent,
       ),
-      initialRoute: ToDoTab.id,
+      initialRoute: TabsScreen.id,
       routes: {
-        ToDoTab.id: (context) {
-          return ToDoTab();
-        },
-        NotesTab.id: (context) {
-          return NotesTab();
-        },
-        BirthdayTab.id: (context) {
-          return BirthdayTab();
+        TabsScreen.id: (context) {
+          return TabsScreen();
         },
         AddbirthdaySheet.id: (context) {
           return AddbirthdaySheet();
         },
         AddNoteScreen.id: (context) {
           return AddNoteScreen();
-        },
-        EventsTab.id: (context) {
-          return EventsTab();
         },
       },
     );
