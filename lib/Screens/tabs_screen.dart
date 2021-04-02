@@ -25,9 +25,7 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   void initState() {
-    widget.preSelected == null
-        ? selectedTab = 0
-        : selectedTab = widget.preSelected;
+    widget.preSelected == null ? selectedTab = 0 : selectedTab = widget.preSelected;
     super.initState();
   }
 
@@ -40,7 +38,7 @@ class _TabsScreenState extends State<TabsScreen> {
         buttonBackgroundColor: Color(0xFF5F35FE),
         color: Color(0xFFeff2f9),
         index: selectedTab,
-        height: 50.0,
+        height: 50,
         items: <Widget>[
           Icon(
             Icons.check_circle_outline,

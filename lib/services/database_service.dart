@@ -11,8 +11,8 @@ class DbManager {
 
   Future openDb() async {
     if (_database == null) {
-      _database = await openDatabase(join(await getDatabasesPath(), "r.db"),
-          version: 1, onCreate: (Database db, int version) async {
+      _database = await openDatabase(join(await getDatabasesPath(), "r.db"), version: 1,
+          onCreate: (Database db, int version) async {
         await db.execute(
           "CREATE TABLE todoTable (id INTEGER PRIMARY KEY autoincrement, name TEXT, done BOOLEAN default 0)",
         );
@@ -27,28 +27,25 @@ class DbManager {
   }
 
 //ToDo
-  Future<int> insertToDo(TodoModel todo) async {
-    await openDb();
-    return await _database.insert('todoTable', todo.toMap());
-  }
 
   Future<List<TodoModel>> getToDoList() async {
     await openDb();
     final List<Map<String, dynamic>> maps = await _database.query('todoTable');
     List<TodoModel> newList = [];
     for (int i = 0; i < maps.length; i++) {
-      newList.add(TodoModel(
-          id: maps[i]['id'],
-          name: maps[i]['name'],
-          done: maps[i]['done'] == 0 ? false : true));
+      newList.add(TodoModel.fromMap(maps[i]));
     }
     return newList;
   }
 
+  Future<int> insertToDo(TodoModel todo) async {
+    await openDb();
+    return await _database.insert('todoTable', todo.toMap());
+  }
+
   Future<int> updateToDo(TodoModel todo) async {
     await openDb();
-    return await _database.update('todoTable', todo.toMap(),
-        where: "id = ?", whereArgs: [todo.id]);
+    return await _database.update('todoTable', todo.toMap(), where: "id = ?", whereArgs: [todo.id]);
   }
 
   Future<void> deleteToDo(int id) async {
@@ -57,28 +54,24 @@ class DbManager {
   }
 
 //Note
-  Future<int> insertNote(NoteModel newnote) async {
-    await openDb();
-    return await _database.insert('noteTable', newnote.toMap());
-  }
-
   Future<List<NoteModel>> getNoteList() async {
     await openDb();
     final List<Map<String, dynamic>> maps = await _database.query('noteTable');
     List<NoteModel> newList = [];
     for (int i = 0; i < maps.length; i++) {
-      newList.add(NoteModel(
-        id: maps[i]['id'],
-        content: maps[i]['content'],
-      ));
+      newList.add(NoteModel.fromMap(maps[i]));
     }
     return newList;
   }
 
+  Future<int> insertNote(NoteModel newnote) async {
+    await openDb();
+    return await _database.insert('noteTable', newnote.toMap());
+  }
+
   Future<int> updateNote(NoteModel newnote) async {
     await openDb();
-    return await _database.update('noteTable', newnote.toMap(),
-        where: "id = ?", whereArgs: [newnote.id]);
+    return await _database.update('noteTable', newnote.toMap(), where: "id = ?", whereArgs: [newnote.id]);
   }
 
   Future<void> deleteNote(int id) async {
@@ -87,29 +80,23 @@ class DbManager {
   }
 
 //Birthday
-  Future<int> insertBirthday(BirthdayModel sb) async {
-    await openDb();
-    return await _database.insert('birthTable', sb.toMap());
-  }
-
   Future<List<BirthdayModel>> getBirthList() async {
     await openDb();
     final List<Map<String, dynamic>> maps = await _database.query('birthTable');
     List<BirthdayModel> newList = [];
     for (int i = 0; i < maps.length; i++) {
-      newList.add(BirthdayModel(
-          id: maps[i]['id'],
-          name: maps[i]['name'],
-          dateString: maps[i]['dateString']));
+      newList.add(BirthdayModel.fromMap(maps[i]));
     }
     return newList;
+  }
+
+  Future<int> insertBirthday(BirthdayModel sb) async {
+    await openDb();
+    return await _database.insert('birthTable', sb.toMap());
   }
 
   Future<void> deleteBirth(int id) async {
     await openDb();
     await _database.delete('birthTable', where: "id = ?", whereArgs: [id]);
   }
-
-  //Events
-
 }

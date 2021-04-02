@@ -22,9 +22,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
 
   @override
   void initState() {
-    widget.note != null
-        ? newNote = widget.note
-        : newNote = NoteModel(content: '');
+    widget.note != null ? newNote = widget.note : newNote = NoteModel(content: '');
     super.initState();
   }
 
@@ -34,18 +32,15 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
       appBar: AppBar(
         backgroundColor: Color(0xFF5F35FE),
         title: Text(
-          'Add a Note',
+          widget.note == null ? 'Add Note' : 'Edit Note',
           style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
         ),
         actions: <Widget>[
           Padding(
             padding: const EdgeInsets.all(14.0),
             child: ButtonTheme(
-              padding: EdgeInsets.symmetric(
-                  vertical: 2.0,
-                  horizontal: 8.0), //adds padding inside the button
-              materialTapTargetSize: MaterialTapTargetSize
-                  .shrinkWrap, //limits the touch area to the button area
+              padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0), //adds padding inside the button
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap, //limits the touch area to the button area
               minWidth: 0, //wraps child's width
               height: 0,
               child: OutlineButton(
@@ -58,12 +53,9 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                   ),
                 ),
                 borderSide: BorderSide(color: Colors.white),
-                shape: new RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
+                shape: new RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
                 onPressed: () {
-                  if (newNote.content != '' &&
-                      newNote.content.toLowerCase() !=
-                          newNote.content.toUpperCase()) {
+                  if (newNote.content != '' && newNote.content.toLowerCase() != newNote.content.toUpperCase()) {
                     if (widget.note == null) {
                       dbmanager.insertNote(newNote).then((id) => {
                             print('Note added at $id'),
@@ -92,11 +84,11 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
         initialValue: newNote.content,
         decoration: InputDecoration(
             hintText: 'Tap here to Write',
-            hintStyle: greetTextStyle,
+            hintStyle: kBodyTextStyle,
             border: OutlineInputBorder(borderSide: BorderSide.none)),
         keyboardType: TextInputType.multiline,
         maxLines: null,
-        style: greetTextStyle,
+        style: kBodyTextStyle,
         onChanged: (value) {
           newNote.content = value;
         },

@@ -15,4 +15,12 @@ class TodoModel {
       'done': this.done == false ? 0 : 1,
     };
   }
+
+  factory TodoModel.fromMap(Map map) {
+    return TodoModel(
+      id: map['id'],
+      name: map['name'],
+      done: map['done'] == 0 ? false : true,
+    );
+  }
 }

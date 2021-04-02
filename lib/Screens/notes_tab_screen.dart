@@ -51,22 +51,19 @@ class _NotesTabState extends State<NotesTab> {
       },
     );
 
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-      title: Text("Confirm Deletion"),
-      content: Text("Are you sure you want to delete these notes?"),
-      actions: [
-        cancelButton,
-        continueButton,
-      ],
-    );
-
     // show the dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return alert;
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+          title: Text("Confirm Deletion"),
+          content: Text("Are you sure you want to delete these notes?"),
+          actions: [
+            cancelButton,
+            continueButton,
+          ],
+        );
       },
     );
   }
@@ -76,10 +73,11 @@ class _NotesTabState extends State<NotesTab> {
     return ListView(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(15.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
+              // Cancel Button
               _selectionMode
                   ? IconButton(
                       icon: Icon(Icons.cancel),
@@ -93,19 +91,23 @@ class _NotesTabState extends State<NotesTab> {
                   : SizedBox(
                       width: 30.0,
                     ),
+
+              // Title
               Text(
                 'Notes',
-                style: titleTextStyle,
+                style: kTitleTextStyle,
               ),
+
+              // Delete Button
               _selectionMode
                   ? IconButton(
                       icon: Icon(Icons.delete),
                       color: Colors.white,
                       onPressed: () {
-                        if (_selectedIndexList.length > 0)
-                          showAlertDialog(context);
+                        if (_selectedIndexList.length > 0) showAlertDialog(context);
                       },
                     )
+                  // Add New Note Button
                   : GestureDetector(
                       child: Icon(
                         Icons.add,
@@ -120,12 +122,10 @@ class _NotesTabState extends State<NotesTab> {
           ),
         ),
         Container(
-          height: MediaQuery.of(context).size.height - 135.0,
+          height: MediaQuery.of(context).size.height - 145.0,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(25.0),
-                topRight: Radius.circular(25.0)),
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
           ),
           child: SingleChildScrollView(
             child: FutureBuilder(
@@ -133,89 +133,76 @@ class _NotesTabState extends State<NotesTab> {
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   notes = snapshot.data;
+
+                  // Empty note list
                   if (notes.length == 0) {
                     return Center(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 280.0),
                         child: Text(
-                          'Add Notes',
-                          style: greetTextStyle,
+                          'No Notes Found',
+                          style: kBodyTextStyle,
                         ),
                       ),
                     );
                   }
+
                   return GridView.count(
                     shrinkWrap: true,
                     primary: false,
                     physics: NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.all(18),
-                    crossAxisSpacing: 8,
-                    mainAxisSpacing: 5,
+                    padding: const EdgeInsets.all(15),
+                    crossAxisSpacing: 15,
+                    mainAxisSpacing: 15,
                     crossAxisCount: 2,
                     children: List.generate(notes.length, (index) {
-                      if (_selectionMode) {
-                        return Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          elevation: 5.0,
-                          color: _selectedIndexList.contains(index)
-                              ? Colors.white70
-                              : Colors.white,
-                          child: GestureDetector(
-                            onLongPress: () {
-                              setState(() {
-                                _changeSelection(enable: false, index: -1);
-                              });
-                            },
-                            onTap: () {
-                              setState(() {
-                                if (_selectedIndexList.contains(index)) {
-                                  _selectedIndexList.remove(index);
-                                } else {
-                                  _selectedIndexList.add(index);
-                                }
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                notes[index].content,
-                                style: TextStyle(fontSize: 19.0),
-                              ),
-                            ),
-                          ),
-                        );
-                      } else {
-                        return Card(
-                          elevation: 10.0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          child: GestureDetector(
-                            onLongPress: () {
-                              setState(() {
-                                _changeSelection(enable: true, index: index);
-                              });
-                            },
-                            onTap: () {
-                              Navigator.push(
+                      return GestureDetector(
+                        onLongPress: () {
+                          _selectionMode
+                              ? _changeSelection(enable: false, index: -1)
+                              : _changeSelection(enable: true, index: index);
+                          setState(() {});
+                        },
+                        onTap: () {
+                          _selectionMode
+                              ? setState(() {
+                                  if (_selectedIndexList.contains(index)) {
+                                    _selectedIndexList.remove(index);
+                                  } else {
+                                    _selectedIndexList.add(index);
+                                  }
+                                })
+                              : Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => AddNoteScreen(
-                                            note: notes[index],
-                                          )));
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                notes[index].content,
-                                style: TextStyle(fontSize: 19.0),
+                                    builder: (context) => AddNoteScreen(
+                                      note: notes[index],
+                                    ),
+                                  ),
+                                );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: _selectionMode && _selectedIndexList.contains(index) ? Colors.white70 : Colors.white,
+                            borderRadius: BorderRadius.circular(10.0),
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 5.0,
+                                offset: Offset(0.0, 4.0),
+                                color: Colors.black.withOpacity(0.25),
                               ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              notes[index].content,
+                              style: kBodyTextStyle,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                        );
-                      }
+                        ),
+                      );
                     }),
                   );
                 } else {
