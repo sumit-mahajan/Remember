@@ -454,7 +454,8 @@ class _ToDoTabState extends State<ToDoTab> {
                                             }
                                           },
                                           decoration: InputDecoration(
-                                            //contentPadding: EdgeInsets.only(left: 10.0),
+                                            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
+                                            hintStyle: kSmallTextStyle,
                                             filled: true,
                                             fillColor: Colors.white,
                                             hintText: 'Enter task',

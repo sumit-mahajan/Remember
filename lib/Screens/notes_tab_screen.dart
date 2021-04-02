@@ -150,6 +150,7 @@ class _NotesTabState extends State<NotesTab> {
                   return GridView.count(
                     shrinkWrap: true,
                     primary: false,
+                    childAspectRatio: 50 / 13,
                     physics: NeverScrollableScrollPhysics(),
                     padding: const EdgeInsets.all(15),
                     crossAxisSpacing: 15,

@@ -47,6 +47,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
         Navigator.of(context).pop();
       },
     );
+
     Widget continueButton = FlatButton(
       child: Text(
         "DELETE",
@@ -65,22 +66,19 @@ class _BirthdayTabState extends State<BirthdayTab> {
       },
     );
 
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-      title: Text("Confirm Deletion"),
-      content: Text("Are you sure you want to delete these Birthdays?"),
-      actions: [
-        cancelButton,
-        continueButton,
-      ],
-    );
-
     // show the dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return alert;
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          title: Text("Confirm Deletion"),
+          content: Text("Are you sure you want to delete these Birthdays?"),
+          actions: [
+            cancelButton,
+            continueButton,
+          ],
+        );
       },
     );
   }

@@ -4,6 +4,7 @@ import 'package:remember/models/birthday_model.dart';
 import 'package:remember/screens/tabs_screen.dart';
 import 'package:remember/services/notifications_service.dart';
 import 'package:remember/services/database_service.dart';
+import 'package:remember/utilities/constants.dart';
 import 'package:remember/widgets/custom_button.dart';
 
 class AddbirthdaySheet extends StatefulWidget {
@@ -19,6 +20,7 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
   DateTime birthdate;
   var formatter = new DateFormat('yyyy-MM-dd');
   DbManager dbmanager = new DbManager();
+  bool f = false;
 
   openDatePicker(BuildContext context) {
     showDatePicker(
@@ -72,6 +74,9 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
             ),
           ),
         );
+      } else {
+        f = true;
+        setState(() {});
       }
     }
   }
@@ -110,6 +115,7 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
                 TextFormField(
                   autofocus: true,
                   decoration: InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
                     filled: true,
                     fillColor: Colors.white,
                     hintText: 'Name of Person',
@@ -136,7 +142,7 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
                     children: <Widget>[
                       Text(
                         birthdate == null ? 'Please select Birthdate' : formatter.format(birthdate),
-                        style: TextStyle(color: Colors.black),
+                        style: kSmallTextStyle.copyWith(color: birthdate == null && f ? Colors.red : Colors.black),
                       ),
                       CustomButton(
                         text: 'Choose Date',
@@ -151,7 +157,9 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
                   text: 'Add',
                   onClick: _addBirthday,
                 ),
-                //SizedBox(height: 10.0),
+                SizedBox(
+                  height: MediaQuery.of(context).viewInsets.bottom,
+                ),
               ],
             ),
           ),

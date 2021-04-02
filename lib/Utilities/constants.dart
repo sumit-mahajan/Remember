@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 
-const kTitleTextStyle = TextStyle(
+// Textstyles
+TextStyle kTitleTextStyle = TextStyle(
   color: Colors.white,
   fontSize: 25.0,
   fontFamily: 'Piedra',
 );
 
-const kBodyTextStyle = TextStyle(
+TextStyle kBodyTextStyle = TextStyle(
   fontSize: 18.0,
 );
 
-const kSmallTextStyle = TextStyle(
+TextStyle kSmallTextStyle = TextStyle(
   fontSize: 16.0,
 );
 
-const kBoldTextStyle = TextStyle(
+TextStyle kBoldTextStyle = TextStyle(
   fontSize: 18.0,
   fontWeight: FontWeight.w600,
 );
 
-const kSubtitleTextStyle = TextStyle(
+TextStyle kSubtitleTextStyle = TextStyle(
   fontSize: 14.0,
   fontWeight: FontWeight.w300,
 );
+
+//Colors

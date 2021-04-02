@@ -72,6 +72,7 @@ class _EventsTabState extends State<EventsTab> {
                   TextField(
                     controller: _eventController,
                     decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
                       filled: true,
                       fillColor: Colors.white,
                       hintText: 'Enter Event',
@@ -102,11 +103,10 @@ class _EventsTabState extends State<EventsTab> {
       return;
     if (_events[_controller.selectedDay] != null) {
       _events[_controller.selectedDay].add(_eventController.text);
-      await notificationPlugin.scheduleNotification(0, _controller.selectedDay, _eventController.text, false);
     } else {
       _events[_controller.selectedDay] = [_eventController.text];
-      await notificationPlugin.scheduleNotification(0, _controller.selectedDay, _eventController.text, false);
     }
+    await notificationPlugin.scheduleNotification(0, _controller.selectedDay, _eventController.text, false);
     prefs.setString("events", json.encode(encodeMap(_events)));
     print(json.encode(encodeMap(_events)));
     _eventController.clear();

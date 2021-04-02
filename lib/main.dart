@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: Size(74, 156.7),
+      designSize: Size(1080, 2340),
       allowFontScaling: false,
       builder: () => MaterialApp(
         theme: ThemeData.light().copyWith(
