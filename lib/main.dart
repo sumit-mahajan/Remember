@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:remember/Screens/add_note_screen.dart';
+import 'package:remember/screens/add_note_screen.dart';
 import 'package:remember/screens/tabs_screen.dart';
 import 'package:remember/widgets/add_birthday_sheet.dart';
 
@@ -14,12 +14,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: Size(1080, 2340),
+      designSize: Size(375, 812),
       allowFontScaling: false,
       builder: () => MaterialApp(
         theme: ThemeData.light().copyWith(
-          primaryColor: Colors.lightBlue,
-          scaffoldBackgroundColor: Color(0xFFFFFFFF),
+          primaryColor: Colors.lightBlue, //Color(0xFF00B4EE)
+          scaffoldBackgroundColor: Colors.white,
           canvasColor: Colors.transparent,
         ),
         initialRoute: TabsScreen.id,

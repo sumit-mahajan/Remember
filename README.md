@@ -8,9 +8,9 @@ A Flutter app to manage daily tasks, add notes, remind birthdays & other events
 ## Screenshots
 
 <pre>
-          <img src="images/todo.jpg" alt="ToDo Page" width="350"/>        <img src="images/note.jpg" alt="Notes Page" width="350"/>
+    <img src="images/todo.jpg" alt="ToDo Page" width="350"/>        <img src="images/note.jpg" alt="Notes Page" width="350"/>
 
-          <img src="images/birthday.jpg" alt="Birthday Page" width="350"/>        <img src="images/event.jpg" alt="Events Page" width="350"/>
+    <img src="images/birthday.jpg" alt="Birthday Page" width="350"/>        <img src="images/event.jpg" alt="Events Page" width="350"/>
 </pre>
 
 ## License

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:remember/utilities/constants.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -18,13 +19,14 @@ class CustomButton extends StatelessWidget {
         height: 45,
         padding: EdgeInsets.all(10.0),
         decoration: BoxDecoration(
-          color: Color(0xFF5B84FF),
+          color: kButtonFillColor,
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Center(
           child: Text(
             text,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+            style: kBody1TextStyle.copyWith(
+                color: Colors.white, fontWeight: FontWeight.w600),
           ),
         ),
       ),

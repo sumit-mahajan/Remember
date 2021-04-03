@@ -38,7 +38,8 @@ class _EventsTabState extends State<EventsTab> {
   initPrefs() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
-      _events = Map<DateTime, List<dynamic>>.from(decodeMap(json.decode(prefs.getString("events") ?? "{}")));
+      _events = Map<DateTime, List<dynamic>>.from(
+          decodeMap(json.decode(prefs.getString("events") ?? "{}")));
       _selectedEvents = _events[_controller.selectedDay];
     });
   }
@@ -63,7 +64,8 @@ class _EventsTabState extends State<EventsTab> {
     await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
               title: Center(child: Text("Add Event")),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -72,7 +74,8 @@ class _EventsTabState extends State<EventsTab> {
                   TextField(
                     controller: _eventController,
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
                       filled: true,
                       fillColor: Colors.white,
                       hintText: 'Enter Event',
@@ -99,14 +102,16 @@ class _EventsTabState extends State<EventsTab> {
   }
 
   _addEvent() async {
-    if (_eventController.text.isEmpty || _eventController.text.toUpperCase() == _eventController.text.toLowerCase())
-      return;
+    if (_eventController.text.isEmpty ||
+        _eventController.text.toUpperCase() ==
+            _eventController.text.toLowerCase()) return;
     if (_events[_controller.selectedDay] != null) {
       _events[_controller.selectedDay].add(_eventController.text);
     } else {
       _events[_controller.selectedDay] = [_eventController.text];
     }
-    await notificationPlugin.scheduleNotification(0, _controller.selectedDay, _eventController.text, false);
+    await notificationPlugin.scheduleNotification(
+        0, _controller.selectedDay, _eventController.text, false);
     prefs.setString("events", json.encode(encodeMap(_events)));
     print(json.encode(encodeMap(_events)));
     _eventController.clear();
@@ -162,10 +167,11 @@ class _EventsTabState extends State<EventsTab> {
                   headerStyle: HeaderStyle(
                     centerHeaderTitle: true,
                     formatButtonDecoration: BoxDecoration(
-                      color: Color(0xFF5B84FF),
+                      color: kButtonFillColor,
                       borderRadius: BorderRadius.circular(20.0),
                     ),
-                    formatButtonTextStyle: TextStyle(color: Colors.white),
+                    formatButtonTextStyle:
+                        kSubtitleTextStyle.copyWith(color: Colors.white),
                     formatButtonShowsNext: false,
                   ),
                   onDaySelected: (date, events) {
@@ -177,19 +183,24 @@ class _EventsTabState extends State<EventsTab> {
                     selectedDayBuilder: (context, date, events) => Container(
                         margin: const EdgeInsets.all(4.0),
                         alignment: Alignment.center,
-                        decoration: BoxDecoration(color: Color(0xFF5B84FF), borderRadius: BorderRadius.circular(10.0)),
+                        decoration: BoxDecoration(
+                            color: kButtonFillColor,
+                            borderRadius: BorderRadius.circular(10.0)),
                         child: Text(
                           date.day.toString(),
-                          style: TextStyle(color: Colors.white),
+                          style:
+                              kSubtitleTextStyle.copyWith(color: Colors.white),
                         )),
                     todayDayBuilder: (context, date, events) => Container(
                         margin: const EdgeInsets.all(4.0),
                         alignment: Alignment.center,
-                        decoration:
-                            BoxDecoration(color: Colors.lightBlueAccent, borderRadius: BorderRadius.circular(10.0)),
+                        decoration: BoxDecoration(
+                            color: Colors.lightBlueAccent,
+                            borderRadius: BorderRadius.circular(10.0)),
                         child: Text(
                           date.day.toString(),
-                          style: TextStyle(color: Colors.white),
+                          style:
+                              kSubtitleTextStyle.copyWith(color: Colors.white),
                         )),
                   ),
                   calendarController: _controller,
@@ -215,7 +226,7 @@ class _EventsTabState extends State<EventsTab> {
                                     return ListTile(
                                       title: Text(
                                         currentEvent,
-                                        style: kSmallTextStyle,
+                                        style: kBody1TextStyle,
                                       ),
                                       trailing: IconButton(
                                           icon: Icon(
@@ -224,14 +235,26 @@ class _EventsTabState extends State<EventsTab> {
                                           ),
                                           onPressed: () async {
                                             setState(() {
-                                              _events[_controller.selectedDay].removeAt(i);
-                                              prefs.setString("events", json.encode(encodeMap(_events)));
+                                              _events[_controller.selectedDay]
+                                                  .removeAt(i);
+                                              prefs.setString(
+                                                  "events",
+                                                  json.encode(
+                                                      encodeMap(_events)));
                                             });
-                                            if (_events[_controller.selectedDay].length == 0 &&
-                                                DateTime.now().isBefore(_controller.selectedDay)) {
-                                              DateTime eDate = _controller.selectedDay;
-                                              int id = (eDate.day * 100 + eDate.month) * 10000 + eDate.year;
-                                              await notificationPlugin.cancelNotification(id);
+                                            if (_events[_controller.selectedDay]
+                                                        .length ==
+                                                    0 &&
+                                                DateTime.now().isBefore(
+                                                    _controller.selectedDay)) {
+                                              DateTime eDate =
+                                                  _controller.selectedDay;
+                                              int id = (eDate.day * 100 +
+                                                          eDate.month) *
+                                                      10000 +
+                                                  eDate.year;
+                                              await notificationPlugin
+                                                  .cancelNotification(id);
                                             }
                                           }),
                                     );
@@ -243,7 +266,7 @@ class _EventsTabState extends State<EventsTab> {
                               padding: const EdgeInsets.all(12.0),
                               child: Text(
                                 'No Events',
-                                style: kBodyTextStyle,
+                                style: kBody1TextStyle,
                               ),
                             ),
                           )

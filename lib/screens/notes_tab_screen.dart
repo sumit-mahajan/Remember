@@ -37,7 +37,7 @@ class _NotesTabState extends State<NotesTab> {
     Widget continueButton = FlatButton(
       child: Text(
         "DELETE",
-        style: TextStyle(color: Colors.redAccent),
+        style: kBody1TextStyle.copyWith(color: Colors.red),
       ),
       onPressed: () {
         Navigator.of(context).pop();
@@ -56,7 +56,8 @@ class _NotesTabState extends State<NotesTab> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
           title: Text("Confirm Deletion"),
           content: Text("Are you sure you want to delete these notes?"),
           actions: [
@@ -104,7 +105,8 @@ class _NotesTabState extends State<NotesTab> {
                       icon: Icon(Icons.delete),
                       color: Colors.white,
                       onPressed: () {
-                        if (_selectedIndexList.length > 0) showAlertDialog(context);
+                        if (_selectedIndexList.length > 0)
+                          showAlertDialog(context);
                       },
                     )
                   // Add New Note Button
@@ -125,7 +127,9 @@ class _NotesTabState extends State<NotesTab> {
           height: MediaQuery.of(context).size.height - 145.0,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.0),
+                topRight: Radius.circular(20.0)),
           ),
           child: SingleChildScrollView(
             child: FutureBuilder(
@@ -141,7 +145,7 @@ class _NotesTabState extends State<NotesTab> {
                         padding: const EdgeInsets.symmetric(vertical: 280.0),
                         child: Text(
                           'No Notes Found',
-                          style: kBodyTextStyle,
+                          style: kBody1TextStyle,
                         ),
                       ),
                     );
@@ -184,7 +188,10 @@ class _NotesTabState extends State<NotesTab> {
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                            color: _selectionMode && _selectedIndexList.contains(index) ? Colors.white70 : Colors.white,
+                            color: _selectionMode &&
+                                    _selectedIndexList.contains(index)
+                                ? Colors.white70
+                                : Colors.white,
                             borderRadius: BorderRadius.circular(10.0),
                             boxShadow: [
                               BoxShadow(
@@ -198,7 +205,7 @@ class _NotesTabState extends State<NotesTab> {
                             padding: const EdgeInsets.all(10.0),
                             child: Text(
                               notes[index].content,
-                              style: kBodyTextStyle,
+                              style: kBody2TextStyle,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),

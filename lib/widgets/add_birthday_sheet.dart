@@ -62,8 +62,12 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
       if (birthdate != null) {
-        dbmanager.insertBirthday(BirthdayModel(name: name, dateString: birthdate.toIso8601String())).then((id) async {
-          await notificationPlugin.scheduleNotification(id, birthdate, name, true);
+        dbmanager
+            .insertBirthday(BirthdayModel(
+                name: name, dateString: birthdate.toIso8601String()))
+            .then((id) async {
+          await notificationPlugin.scheduleNotification(
+              id, birthdate, name, true);
         });
 
         Navigator.push(
@@ -99,8 +103,9 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
         child: Container(
           decoration: new BoxDecoration(
               color: Colors.white,
-              borderRadius:
-                  new BorderRadius.only(topLeft: const Radius.circular(20.0), topRight: const Radius.circular(20.0))),
+              borderRadius: new BorderRadius.only(
+                  topLeft: const Radius.circular(20.0),
+                  topRight: const Radius.circular(20.0))),
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom + 20.0,
             top: 20.0,
@@ -115,7 +120,8 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
                 TextFormField(
                   autofocus: true,
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
                     filled: true,
                     fillColor: Colors.white,
                     hintText: 'Name of Person',
@@ -127,7 +133,8 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
                     name = value;
                   },
                   validator: (input) {
-                    if (input == '' || input.toLowerCase() == input.toUpperCase()) {
+                    if (input == '' ||
+                        input.toLowerCase() == input.toUpperCase()) {
                       return 'Name can\'t be empty';
                     } else if (input.length > 25) {
                       return 'Name should be within 25 characters';
@@ -141,8 +148,13 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        birthdate == null ? 'Please select Birthdate' : formatter.format(birthdate),
-                        style: kSmallTextStyle.copyWith(color: birthdate == null && f ? Colors.red : Colors.black),
+                        birthdate == null
+                            ? 'Please select Birthdate'
+                            : formatter.format(birthdate),
+                        style: kBody1TextStyle.copyWith(
+                            color: birthdate == null && f
+                                ? Colors.red
+                                : Colors.black),
                       ),
                       CustomButton(
                         text: 'Choose Date',

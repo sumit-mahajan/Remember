@@ -15,10 +15,6 @@ String quoteText;
 String author;
 
 class ToDoTab extends StatefulWidget {
-  AnimationController progressController;
-  Animation animation;
-  //static const id = 'to_do_page';
-
   @override
   _ToDoTabState createState() => _ToDoTabState();
 }
@@ -67,7 +63,8 @@ class _ToDoTabState extends State<ToDoTab> {
     });
   }
 
-  void _onDismiss(BuildContext context, DismissDirection dir, TodoModel currentitem, int i) {
+  void _onDismiss(BuildContext context, DismissDirection dir,
+      TodoModel currentitem, int i) {
     setState(
       () {
         if (dir == DismissDirection.endToStart) {
@@ -94,7 +91,9 @@ class _ToDoTabState extends State<ToDoTab> {
     Scaffold.of(context).showSnackBar(
       SnackBar(
         duration: Duration(milliseconds: 800),
-        content: Text(dir == DismissDirection.startToEnd ? 'Task Deleted' : 'Marked Complete'),
+        content: Text(dir == DismissDirection.startToEnd
+            ? 'Task Deleted'
+            : 'Marked Complete'),
         action: SnackBarAction(
             label: 'UNDO',
             onPressed: () {
@@ -103,7 +102,8 @@ class _ToDoTabState extends State<ToDoTab> {
                   if (dir == DismissDirection.startToEnd) {
                     dbmanager.insertToDo(deletedItem);
                     totaltasks++;
-                    countDone = deletedItem.done == true ? countDone + 1 : countDone;
+                    countDone =
+                        deletedItem.done == true ? countDone + 1 : countDone;
                   } else {
                     currentitem.done = false;
                     dbmanager.updateToDo(currentitem);
@@ -138,7 +138,9 @@ class _ToDoTabState extends State<ToDoTab> {
     quoteText = quoteList[rn]['quoteText'];
     author = quoteList[rn]['quoteAuthor'];
     isFirstTime().then((isFirstTime) {
-      isFirstTime ? notificationPlugin.showDailyAtTime() : print("Not first time");
+      isFirstTime
+          ? notificationPlugin.showDailyAtTime()
+          : print("Not first time");
     });
     notificationPlugin.setOnNotificationClick(onNotificationClick);
   }
@@ -194,7 +196,7 @@ class _ToDoTabState extends State<ToDoTab> {
                           Text(
                             quoteText,
                             textAlign: TextAlign.center,
-                            style: kSmallTextStyle,
+                            style: kBody1TextStyle,
                           ),
 
                           //Quote Author
@@ -203,9 +205,11 @@ class _ToDoTabState extends State<ToDoTab> {
                             child: Align(
                               alignment: Alignment.bottomRight,
                               child: Text(
-                                author == '' ? '- ' + 'Anonymous' : '- ' + author,
+                                author == ''
+                                    ? '- ' + 'Anonymous'
+                                    : '- ' + author,
                                 textAlign: TextAlign.right,
-                                style: kSmallTextStyle,
+                                style: kBody1TextStyle,
                               ),
                             ),
                           ),
@@ -218,7 +222,7 @@ class _ToDoTabState extends State<ToDoTab> {
                     padding: EdgeInsets.only(top: 15.0, bottom: 5),
                     child: Container(
                       height: 1.0,
-                      color: Color(0xFF00B4EE),
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
 
@@ -232,10 +236,13 @@ class _ToDoTabState extends State<ToDoTab> {
                             : countDone / totaltasks
                         : 0.0,
                     center: Text(
-                      countDone.toString() + ' / ' + totaltasks.toString() + ' Done',
-                      style: kSmallTextStyle.copyWith(fontSize: 14.0),
+                      countDone.toString() +
+                          ' / ' +
+                          totaltasks.toString() +
+                          ' Done',
+                      style: kBody1TextStyle.copyWith(fontSize: 14.0),
                     ),
-                    progressColor: Color(0xFF5B84FF),
+                    progressColor: kButtonFillColor,
                     circularStrokeCap: CircularStrokeCap.round,
                     animation: true,
                   ),
@@ -245,7 +252,7 @@ class _ToDoTabState extends State<ToDoTab> {
                   // ToDo list block
                   Container(
                     decoration: BoxDecoration(
-                      color: Color(0xFFeff2f9),
+                      color: kNavBarColor,
                       borderRadius: BorderRadius.circular(10.0),
                       boxShadow: [
                         BoxShadow(
@@ -271,13 +278,15 @@ class _ToDoTabState extends State<ToDoTab> {
                               GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    visibleTextField ? visibleTextField = false : visibleTextField = true;
+                                    visibleTextField
+                                        ? visibleTextField = false
+                                        : visibleTextField = true;
                                   });
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(5.0),
                                   decoration: BoxDecoration(
-                                    color: Color(0xFF5B84FF),
+                                    color: kButtonFillColor,
                                     borderRadius: BorderRadius.circular(50),
                                     boxShadow: [
                                       BoxShadow(
@@ -303,14 +312,15 @@ class _ToDoTabState extends State<ToDoTab> {
                           padding: EdgeInsets.symmetric(horizontal: 10.0),
                           child: Container(
                             height: 1.0,
-                            color: Color(0xFF00B4EE),
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
 
                         // Task Listview
                         FutureBuilder(
                           future: dbmanager.getToDoList(),
-                          builder: (BuildContext context, AsyncSnapshot snapshot) {
+                          builder:
+                              (BuildContext context, AsyncSnapshot snapshot) {
                             if (snapshot.hasData) {
                               itemList = snapshot.data;
                               countDone = getDoneCount(itemList);
@@ -323,26 +333,29 @@ class _ToDoTabState extends State<ToDoTab> {
                                     padding: const EdgeInsets.all(10.0),
                                     child: Text(
                                       'Please assign some tasks',
-                                      style: TextStyle(fontSize: 18.0),
+                                      style: kBody1TextStyle,
                                     ),
                                   ),
                                 );
                               }
 
                               return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15.0),
                                 child: ListView.separated(
                                   scrollDirection: Axis.vertical,
                                   shrinkWrap: true,
                                   physics: NeverScrollableScrollPhysics(),
-                                  itemCount: itemList == null ? 0 : itemList.length,
+                                  itemCount:
+                                      itemList == null ? 0 : itemList.length,
                                   itemBuilder: (context, i) {
                                     final TodoModel currentitem = itemList[i];
                                     // Dismissible Widget
                                     return Dismissible(
                                       key: Key(currentitem.name),
                                       confirmDismiss: (dir) {
-                                        _onDismiss(context, dir, currentitem, i);
+                                        _onDismiss(
+                                            context, dir, currentitem, i);
                                         return null;
                                       },
                                       // On swiping left to right (delete)
@@ -365,23 +378,28 @@ class _ToDoTabState extends State<ToDoTab> {
                                       ),
                                       // Task List Tile
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.0),
                                         child: Container(
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius: BorderRadius.circular(10.0),
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
                                             boxShadow: [
                                               BoxShadow(
                                                 blurRadius: 10.0,
                                                 offset: Offset(0.0, 4.0),
-                                                color: Colors.black.withOpacity(0.25),
+                                                color: Colors.black
+                                                    .withOpacity(0.25),
                                               ),
                                             ],
                                           ),
                                           child: Padding(
                                             padding: const EdgeInsets.all(10.0),
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: <Widget>[
                                                 Row(
                                                   children: <Widget>[
@@ -389,8 +407,11 @@ class _ToDoTabState extends State<ToDoTab> {
                                                     Icon(
                                                         itemList[i].done
                                                             ? Icons.check_box
-                                                            : Icons.check_box_outline_blank,
-                                                        color: itemList[i].done ? Colors.green : Colors.blueGrey),
+                                                            : Icons
+                                                                .check_box_outline_blank,
+                                                        color: itemList[i].done
+                                                            ? Colors.green
+                                                            : Colors.blueGrey),
                                                   ],
                                                 ),
                                                 SizedBox(width: 10.0),
@@ -399,10 +420,16 @@ class _ToDoTabState extends State<ToDoTab> {
                                                 Flexible(
                                                   child: Text(
                                                     currentitem.name,
-                                                    style: kBodyTextStyle.copyWith(
-                                                      decoration: itemList[i].done ? TextDecoration.lineThrough : null,
+                                                    style: kBody1TextStyle
+                                                        .copyWith(
+                                                      decoration:
+                                                          itemList[i].done
+                                                              ? TextDecoration
+                                                                  .lineThrough
+                                                              : null,
                                                     ),
-                                                    overflow: TextOverflow.ellipsis,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                   ),
                                                 ),
 
@@ -423,7 +450,8 @@ class _ToDoTabState extends State<ToDoTab> {
                                       ),
                                     );
                                   },
-                                  separatorBuilder: (context, index) => SizedBox(
+                                  separatorBuilder: (context, index) =>
+                                      SizedBox(
                                     height: 15.0,
                                   ),
                                 ),
@@ -436,7 +464,8 @@ class _ToDoTabState extends State<ToDoTab> {
                         // Add task
                         visibleTextField
                             ? Padding(
-                                padding: EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
+                                padding: EdgeInsets.only(
+                                    left: 10.0, right: 10.0, bottom: 10.0),
                                 child: Form(
                                   key: formKey,
                                   child: Row(
@@ -447,20 +476,26 @@ class _ToDoTabState extends State<ToDoTab> {
                                         child: TextFormField(
                                           controller: _namecontroller,
                                           validator: (value) {
-                                            if (value == '' || value.toLowerCase() == value.toUpperCase()) {
+                                            if (value == '' ||
+                                                value.toLowerCase() ==
+                                                    value.toUpperCase()) {
                                               return 'Please enter a task';
                                             } else {
                                               return null;
                                             }
                                           },
                                           decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
-                                            hintStyle: kSmallTextStyle,
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 0,
+                                                    horizontal: 10.0),
+                                            hintStyle: kBody1TextStyle,
                                             filled: true,
                                             fillColor: Colors.white,
                                             hintText: 'Enter task',
                                             border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(10.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
                                             ),
                                           ),
                                           autofocus: true,

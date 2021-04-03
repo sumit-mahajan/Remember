@@ -4,6 +4,7 @@ import 'package:remember/screens/birthdays_tab_screen.dart';
 import 'package:remember/screens/events_tab_screen.dart';
 import 'package:remember/screens/notes_tab_screen.dart';
 import 'package:remember/screens/todo_tab_screen.dart';
+import 'package:remember/utilities/constants.dart';
 
 class TabsScreen extends StatefulWidget {
   static String id = 'tabs_screen';
@@ -25,18 +26,20 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   void initState() {
-    widget.preSelected == null ? selectedTab = 0 : selectedTab = widget.preSelected;
+    widget.preSelected == null
+        ? selectedTab = 0
+        : selectedTab = widget.preSelected;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF5F35FE),
+      backgroundColor: kAppPrimaryColor,
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.white,
-        buttonBackgroundColor: Color(0xFF5F35FE),
-        color: Color(0xFFeff2f9),
+        buttonBackgroundColor: kAppPrimaryColor,
+        color: kNavBarColor,
         index: selectedTab,
         height: 50,
         items: <Widget>[
