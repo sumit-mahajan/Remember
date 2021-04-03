@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:remember/widgets/custom_button.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -65,7 +66,7 @@ class _EventsTabState extends State<EventsTab> {
         context: context,
         builder: (context) => AlertDialog(
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
+                  borderRadius: BorderRadius.circular(10.r)),
               title: Center(child: Text("Add Event")),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -75,18 +76,18 @@ class _EventsTabState extends State<EventsTab> {
                     controller: _eventController,
                     decoration: InputDecoration(
                       contentPadding:
-                          EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
+                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 0.h),
                       filled: true,
                       fillColor: Colors.white,
                       hintText: 'Enter Event',
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
+                        borderRadius: BorderRadius.circular(10.r),
                       ),
                     ),
                     autofocus: true,
                   ),
                   SizedBox(
-                    height: 10.0,
+                    height: 10.h,
                   ),
                   // Add Button
                   CustomButton(
@@ -123,12 +124,12 @@ class _EventsTabState extends State<EventsTab> {
     return ListView(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: EdgeInsets.all(15.r),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
-                width: 30.0,
+                width: 30.w,
               ),
               Text(
                 'Events',
@@ -138,7 +139,7 @@ class _EventsTabState extends State<EventsTab> {
                 child: Icon(
                   Icons.add,
                   color: Colors.white,
-                  size: 30.0,
+                  size: 30.r,
                 ),
                 onTap: _showAddDialog,
               )
@@ -146,14 +147,12 @@ class _EventsTabState extends State<EventsTab> {
           ),
         ),
         Container(
-          height: MediaQuery.of(context).size.height - 145.0,
+          height: MediaQuery.of(context).size.height - 157.h,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20.0),
-                topRight: Radius.circular(
-                  20.0,
-                )),
+                topLeft: Radius.circular(20.r),
+                topRight: Radius.circular(20.r)),
           ),
           child: SingleChildScrollView(
             child: Column(
@@ -168,7 +167,7 @@ class _EventsTabState extends State<EventsTab> {
                     centerHeaderTitle: true,
                     formatButtonDecoration: BoxDecoration(
                       color: kButtonFillColor,
-                      borderRadius: BorderRadius.circular(20.0),
+                      borderRadius: BorderRadius.circular(20.r),
                     ),
                     formatButtonTextStyle:
                         kSubtitleTextStyle.copyWith(color: Colors.white),
@@ -181,22 +180,22 @@ class _EventsTabState extends State<EventsTab> {
                   },
                   builders: CalendarBuilders(
                     selectedDayBuilder: (context, date, events) => Container(
-                        margin: const EdgeInsets.all(4.0),
+                        margin: EdgeInsets.all(4.r),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                             color: kButtonFillColor,
-                            borderRadius: BorderRadius.circular(10.0)),
+                            borderRadius: BorderRadius.circular(10.r)),
                         child: Text(
                           date.day.toString(),
                           style:
                               kSubtitleTextStyle.copyWith(color: Colors.white),
                         )),
                     todayDayBuilder: (context, date, events) => Container(
-                        margin: const EdgeInsets.all(4.0),
+                        margin: EdgeInsets.all(4.r),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                             color: Colors.lightBlueAccent,
-                            borderRadius: BorderRadius.circular(10.0)),
+                            borderRadius: BorderRadius.circular(10.r)),
                         child: Text(
                           date.day.toString(),
                           style:
@@ -210,7 +209,7 @@ class _EventsTabState extends State<EventsTab> {
                         ? Column(
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.all(12.0),
+                                padding: EdgeInsets.all(12.r),
                                 child: Text(
                                   'Events',
                                   style: kBoldTextStyle,
@@ -263,7 +262,7 @@ class _EventsTabState extends State<EventsTab> {
                           )
                         : Center(
                             child: Padding(
-                              padding: const EdgeInsets.all(12.0),
+                              padding: EdgeInsets.all(15.r),
                               child: Text(
                                 'No Events',
                                 style: kBody1TextStyle,

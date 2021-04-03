@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:remember/models/birthday_model.dart';
 
 import 'package:remember/services/notifications_service.dart';
@@ -24,6 +25,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
   List<int> _selectedIndexList = List();
   bool _selectionMode = false;
   DbManager dbmanager = DbManager();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -54,15 +56,23 @@ class _BirthdayTabState extends State<BirthdayTab> {
         style: kBody1TextStyle.copyWith(color: Colors.red),
       ),
       onPressed: () {
-        Navigator.of(context).pop();
+        setState(() {
+          isLoading = true;
+        });
         _selectedIndexList.sort();
         for (int i in _selectedIndexList) {
           dbmanager.deleteBirth(laterBirthList[i].id);
-          notificationPlugin.cancelNotification(laterBirthList[i].id);
+          for (int j = 0; j < 50; j++) {
+            notificationPlugin
+                .cancelNotification(laterBirthList[i].id * 100 + j);
+            print(laterBirthList[i].id * 100 + j);
+          }
         }
         setState(() {
+          isLoading = false;
           _changeSelection(enable: false, index: -1);
         });
+        Navigator.of(context).pop();
       },
     );
 
@@ -72,9 +82,17 @@ class _BirthdayTabState extends State<BirthdayTab> {
       builder: (BuildContext context) {
         return AlertDialog(
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
           title: Text("Confirm Deletion"),
-          content: Text("Are you sure you want to delete these Birthdays?"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("Are you sure you want to delete these Birthdays?"),
+              Center(
+                child: Text(isLoading ? 'Loading...' : ''),
+              )
+            ],
+          ),
           actions: [
             cancelButton,
             continueButton,
@@ -110,7 +128,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
   Widget build(BuildContext context) {
     return ListView(children: <Widget>[
       Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: EdgeInsets.all(15.r),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -125,7 +143,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
                     },
                   )
                 : SizedBox(
-                    width: 30.0,
+                    width: 30.w,
                   ),
             Text(
               'Birthdays',
@@ -144,7 +162,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
                     child: Icon(
                       Icons.add,
                       color: Colors.white,
-                      size: 30.0,
+                      size: 30.r,
                     ),
                     onTap: () {
                       showModalBottomSheet(
@@ -157,12 +175,12 @@ class _BirthdayTabState extends State<BirthdayTab> {
         ),
       ),
       Container(
-        height: MediaQuery.of(context).size.height - 145.0,
+        height: MediaQuery.of(context).size.height - 157.h,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.0),
-            topRight: Radius.circular(20.0),
+            topLeft: Radius.circular(20.r),
+            topRight: Radius.circular(20.r),
           ),
         ),
         child: SingleChildScrollView(
@@ -174,7 +192,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
                 if (birthList.length == 0) {
                   return Center(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 280.0),
+                      padding: EdgeInsets.symmetric(vertical: 280.h),
                       child: Text(
                         'No Birthdays Found',
                         style: kBody1TextStyle,
@@ -204,7 +222,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
                     children: <Widget>[
                       todayList.length != 0
                           ? Padding(
-                              padding: const EdgeInsets.only(top: 15.0),
+                              padding: EdgeInsets.only(top: 15.h),
                               child: Text(
                                 'Today',
                                 style: kBoldTextStyle,
@@ -218,12 +236,12 @@ class _BirthdayTabState extends State<BirthdayTab> {
                           itemCount: todayList.length,
                           itemBuilder: (context, i) {
                             return Padding(
-                              padding: const EdgeInsets.only(top: 4.0),
+                              padding: EdgeInsets.only(top: 15.h),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Container(
-                                    width: 70.0,
+                                    width: 75.w,
                                     child: Center(
                                       child: ClipOval(
                                         child: Material(
@@ -245,7 +263,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: 10.0),
+                                  SizedBox(width: 10.w),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -272,8 +290,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
                           }),
                       laterBirthList.length > 0
                           ? Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 15.0),
+                              padding: EdgeInsets.symmetric(vertical: 15.h),
                               child: Text(
                                 'Later',
                                 style: kBoldTextStyle,
@@ -311,13 +328,13 @@ class _BirthdayTabState extends State<BirthdayTab> {
                                           _selectedIndexList.contains(i)
                                       ? Colors.lightBlueAccent
                                       : Colors.white,
-                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderRadius: BorderRadius.circular(10.r),
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Container(
-                                      width: 70,
+                                      width: 75.w,
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         crossAxisAlignment:
@@ -327,17 +344,17 @@ class _BirthdayTabState extends State<BirthdayTab> {
                                           Text(
                                             laterBirthList[i].days.toString(),
                                             style: kBoldTextStyle.copyWith(
-                                                fontSize: 25.0),
+                                                fontSize: 28.sp),
                                           ),
                                           Text(
                                             'days',
                                             style: kBody1TextStyle.copyWith(
-                                                fontSize: 12.0),
+                                                fontSize: 14.sp),
                                           ),
                                         ],
                                       ),
                                     ),
-                                    SizedBox(width: 10.0),
+                                    SizedBox(width: 10.w),
                                     Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -347,7 +364,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
                                           style: kBody1TextStyle,
                                         ),
                                         SizedBox(
-                                          height: 3.0,
+                                          height: 3.h,
                                         ),
                                         Text(
                                           'BirthDate: ' +
@@ -366,7 +383,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
                           },
                           separatorBuilder: (context, i) {
                             return SizedBox(
-                              height: 15.0,
+                              height: 15.h,
                             );
                           }),
                     ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:remember/screens/tabs_screen.dart';
 
 import 'package:remember/utilities/constants.dart';
@@ -8,7 +9,7 @@ import 'package:remember/models/note_model.dart';
 
 class AddNoteScreen extends StatefulWidget {
   static const id = 'add_note';
-  NoteModel note;
+  final NoteModel note;
 
   AddNoteScreen({this.note});
 
@@ -40,11 +41,11 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
         ),
         actions: <Widget>[
           Padding(
-            padding: const EdgeInsets.all(14.0),
+            padding: EdgeInsets.all(15.r),
             child: ButtonTheme(
               padding: EdgeInsets.symmetric(
-                  vertical: 2.0,
-                  horizontal: 8.0), //adds padding inside the button
+                  vertical: 2.h,
+                  horizontal: 8.w), //adds padding inside the button
               materialTapTargetSize: MaterialTapTargetSize
                   .shrinkWrap, //limits the touch area to the button area
               minWidth: 0, //wraps child's width
@@ -56,7 +57,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                 ),
                 borderSide: BorderSide(color: Colors.white),
                 shape: new RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
+                    borderRadius: BorderRadius.circular(5.r)),
                 onPressed: () {
                   if (newNote.content != '' &&
                       newNote.content.toLowerCase() !=

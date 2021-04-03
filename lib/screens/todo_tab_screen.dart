@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:remember/widgets/custom_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:remember/services/notifications_service.dart';
 import 'package:remember/utilities/constants.dart';
@@ -151,7 +152,7 @@ class _ToDoTabState extends State<ToDoTab> {
       children: <Widget>[
         // Title
         Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: EdgeInsets.all(15.r),
           child: Center(
             child: Text(
               'ToDo',
@@ -162,16 +163,16 @@ class _ToDoTabState extends State<ToDoTab> {
 
         // App body
         Container(
-          height: MediaQuery.of(context).size.height - 145.0,
+          height: MediaQuery.of(context).size.height - 157.h,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20.0),
-              topRight: Radius.circular(20.0),
+              topLeft: Radius.circular(20.r),
+              topRight: Radius.circular(20.r),
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: EdgeInsets.all(15.r),
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
@@ -179,17 +180,17 @@ class _ToDoTabState extends State<ToDoTab> {
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(15.0),
+                      borderRadius: BorderRadius.circular(15.r),
                       boxShadow: [
                         BoxShadow(
-                          blurRadius: 10.0,
+                          blurRadius: 10.r,
                           offset: Offset(0.0, 4.0),
                           color: Colors.black.withOpacity(0.25),
                         ),
                       ],
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(15.0),
+                      padding: EdgeInsets.all(15.r),
                       child: Column(
                         children: <Widget>[
                           // Quote Text
@@ -201,7 +202,7 @@ class _ToDoTabState extends State<ToDoTab> {
 
                           //Quote Author
                           Padding(
-                            padding: const EdgeInsets.only(top: 10.0),
+                            padding: EdgeInsets.only(top: 10.h),
                             child: Align(
                               alignment: Alignment.bottomRight,
                               child: Text(
@@ -219,17 +220,17 @@ class _ToDoTabState extends State<ToDoTab> {
                   ),
                   // Horizontal Line
                   Padding(
-                    padding: EdgeInsets.only(top: 15.0, bottom: 5),
+                    padding: EdgeInsets.only(top: 15.h, bottom: 5.h),
                     child: Container(
-                      height: 1.0,
+                      height: 1.h,
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
 
                   // Circular percent indicator
                   CircularPercentIndicator(
-                    radius: 100.0,
-                    lineWidth: 10.0,
+                    radius: 115.r,
+                    lineWidth: 10.w,
                     percent: totaltasks > 0
                         ? countDone == null
                             ? 0
@@ -240,23 +241,23 @@ class _ToDoTabState extends State<ToDoTab> {
                           ' / ' +
                           totaltasks.toString() +
                           ' Done',
-                      style: kBody1TextStyle.copyWith(fontSize: 14.0),
+                      style: kBody1TextStyle.copyWith(fontSize: 16.sp),
                     ),
                     progressColor: kButtonFillColor,
                     circularStrokeCap: CircularStrokeCap.round,
                     animation: true,
                   ),
                   // Custom padding
-                  SizedBox(height: 5.0),
+                  SizedBox(height: 10.h),
 
                   // ToDo list block
                   Container(
                     decoration: BoxDecoration(
                       color: kNavBarColor,
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius: BorderRadius.circular(10.r),
                       boxShadow: [
                         BoxShadow(
-                          blurRadius: 10.0,
+                          blurRadius: 10.r,
                           offset: Offset(0.0, 4.0),
                           color: Colors.black.withOpacity(0.25),
                         ),
@@ -267,7 +268,7 @@ class _ToDoTabState extends State<ToDoTab> {
                       children: <Widget>[
                         // Row for Title
                         Padding(
-                          padding: const EdgeInsets.all(10.0),
+                          padding: EdgeInsets.all(10.r),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
@@ -284,13 +285,13 @@ class _ToDoTabState extends State<ToDoTab> {
                                   });
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.all(5.0),
+                                  padding: EdgeInsets.all(5.r),
                                   decoration: BoxDecoration(
                                     color: kButtonFillColor,
                                     borderRadius: BorderRadius.circular(50),
                                     boxShadow: [
                                       BoxShadow(
-                                        blurRadius: 10.0,
+                                        blurRadius: 10.r,
                                         offset: Offset(0.0, 4.0),
                                         color: Colors.black.withOpacity(0.25),
                                       ),
@@ -298,7 +299,7 @@ class _ToDoTabState extends State<ToDoTab> {
                                   ),
                                   child: Icon(
                                     visibleTextField ? Icons.remove : Icons.add,
-                                    size: 35.0,
+                                    size: 35.r,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -309,9 +310,9 @@ class _ToDoTabState extends State<ToDoTab> {
 
                         // Horizontal line
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
                           child: Container(
-                            height: 1.0,
+                            height: 1.h,
                             color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
@@ -330,7 +331,7 @@ class _ToDoTabState extends State<ToDoTab> {
                               if (itemList.length == 0) {
                                 return Center(
                                   child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
+                                    padding: EdgeInsets.all(10.r),
                                     child: Text(
                                       'Please assign some tasks',
                                       style: kBody1TextStyle,
@@ -340,8 +341,7 @@ class _ToDoTabState extends State<ToDoTab> {
                               }
 
                               return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 15.0),
+                                padding: EdgeInsets.symmetric(vertical: 15.h),
                                 child: ListView.separated(
                                   scrollDirection: Axis.vertical,
                                   shrinkWrap: true,
@@ -378,16 +378,16 @@ class _ToDoTabState extends State<ToDoTab> {
                                       ),
                                       // Task List Tile
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10.0),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10.w),
                                         child: Container(
                                           decoration: BoxDecoration(
                                             color: Colors.white,
                                             borderRadius:
-                                                BorderRadius.circular(10.0),
+                                                BorderRadius.circular(10.r),
                                             boxShadow: [
                                               BoxShadow(
-                                                blurRadius: 10.0,
+                                                blurRadius: 10.r,
                                                 offset: Offset(0.0, 4.0),
                                                 color: Colors.black
                                                     .withOpacity(0.25),
@@ -395,7 +395,7 @@ class _ToDoTabState extends State<ToDoTab> {
                                             ],
                                           ),
                                           child: Padding(
-                                            padding: const EdgeInsets.all(10.0),
+                                            padding: EdgeInsets.all(10.r),
                                             child: Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
@@ -414,7 +414,7 @@ class _ToDoTabState extends State<ToDoTab> {
                                                             : Colors.blueGrey),
                                                   ],
                                                 ),
-                                                SizedBox(width: 10.0),
+                                                SizedBox(width: 10.w),
 
                                                 // Task name
                                                 Flexible(
@@ -433,7 +433,7 @@ class _ToDoTabState extends State<ToDoTab> {
                                                   ),
                                                 ),
 
-                                                SizedBox(width: 10.0),
+                                                SizedBox(width: 10.w),
                                                 Row(
                                                   children: <Widget>[
                                                     Icon(
@@ -452,7 +452,7 @@ class _ToDoTabState extends State<ToDoTab> {
                                   },
                                   separatorBuilder: (context, index) =>
                                       SizedBox(
-                                    height: 15.0,
+                                    height: 15.h,
                                   ),
                                 ),
                               );
@@ -465,7 +465,7 @@ class _ToDoTabState extends State<ToDoTab> {
                         visibleTextField
                             ? Padding(
                                 padding: EdgeInsets.only(
-                                    left: 10.0, right: 10.0, bottom: 10.0),
+                                    left: 10.w, right: 10.w, bottom: 10.h),
                                 child: Form(
                                   key: formKey,
                                   child: Row(
@@ -488,14 +488,14 @@ class _ToDoTabState extends State<ToDoTab> {
                                             contentPadding:
                                                 EdgeInsets.symmetric(
                                                     vertical: 0,
-                                                    horizontal: 10.0),
+                                                    horizontal: 10.w),
                                             hintStyle: kBody1TextStyle,
                                             filled: true,
                                             fillColor: Colors.white,
                                             hintText: 'Enter task',
                                             border: OutlineInputBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(10.0),
+                                                  BorderRadius.circular(10.r),
                                             ),
                                           ),
                                           autofocus: true,
@@ -506,7 +506,7 @@ class _ToDoTabState extends State<ToDoTab> {
                                           },
                                         ),
                                       ),
-                                      SizedBox(width: 10.0),
+                                      SizedBox(width: 10.w),
                                       // Add task Button
                                       CustomButton(
                                         text: 'Add',

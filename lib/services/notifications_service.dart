@@ -6,7 +6,8 @@ import 'package:rxdart/subjects.dart';
 class NotificationPlugin {
   //
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-  final BehaviorSubject<ReceivedNotification> didReceivedLocalNotificationSubject =
+  final BehaviorSubject<ReceivedNotification>
+      didReceivedLocalNotificationSubject =
       BehaviorSubject<ReceivedNotification>();
   var initializationSettings;
 
@@ -23,24 +24,27 @@ class NotificationPlugin {
   }
 
   initializePlatformSpecifics() {
-    var initializationSettingsAndroid = AndroidInitializationSettings('new_icon');
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('new_icon');
     var initializationSettingsIOS = IOSInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: false,
       onDidReceiveLocalNotification: (id, title, body, payload) async {
-        ReceivedNotification receivedNotification =
-            ReceivedNotification(id: id, title: title, body: body, payload: payload);
+        ReceivedNotification receivedNotification = ReceivedNotification(
+            id: id, title: title, body: body, payload: payload);
         didReceivedLocalNotificationSubject.add(receivedNotification);
       },
     );
 
-    initializationSettings = InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
+    initializationSettings = InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
   }
 
   _requestIOSPermission() {
     flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>()
         .requestPermissions(
           alert: false,
           badge: true,
@@ -94,7 +98,8 @@ class NotificationPlugin {
       priority: Priority.High,
     );
     var iosChannelSpecifics = IOSNotificationDetails();
-    var platformChannelSpecifics = NotificationDetails(androidChannelSpecifics, iosChannelSpecifics);
+    var platformChannelSpecifics =
+        NotificationDetails(androidChannelSpecifics, iosChannelSpecifics);
     await flutterLocalNotificationsPlugin.showDailyAtTime(
       0,
       'Good Morning, what\'s on your mind today ?',
@@ -105,14 +110,15 @@ class NotificationPlugin {
     );
   }
 
-  Future<void> scheduleNotification(int id, DateTime eDate, String eName, bool f) async {
-    if (f) {
-      if (DateTime(DateTime.now().year, eDate.month, eDate.day).isAfter(DateTime.now())) {
-        eDate = DateTime(DateTime.now().year, eDate.month, eDate.day);
-      } else {
-        eDate = DateTime(DateTime.now().year + 1, eDate.month, eDate.day);
-      }
-    }
+  Future<void> scheduleNotification(
+      int id, DateTime eDate, String eName, bool f) async {
+    // if (f) {
+    //   if (DateTime(DateTime.now().year, eDate.month, eDate.day).isAfter(DateTime.now())) {
+    //     eDate = DateTime(DateTime.now().year, eDate.month, eDate.day);
+    //   } else {
+    //     eDate = DateTime(DateTime.now().year + 1, eDate.month, eDate.day);
+    //   }
+    // }
     var scheduleNotificationDateTime = eDate;
     var androidChannelSpecifics = AndroidNotificationDetails(
       'CHANNEL_ID 1',
@@ -142,7 +148,8 @@ class NotificationPlugin {
   }
 
   Future<int> getPendingNotificationCount() async {
-    List<PendingNotificationRequest> p = await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+    List<PendingNotificationRequest> p =
+        await flutterLocalNotificationsPlugin.pendingNotificationRequests();
     return p.length;
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:remember/models/birthday_model.dart';
 import 'package:remember/screens/tabs_screen.dart';
 import 'package:remember/services/notifications_service.dart';
@@ -21,6 +22,8 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
   var formatter = new DateFormat('yyyy-MM-dd');
   DbManager dbmanager = new DbManager();
   bool f = false;
+  FocusNode _nameNode = FocusNode();
+  bool isLoading = false;
 
   openDatePicker(BuildContext context) {
     showDatePicker(
@@ -58,16 +61,35 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
     });
   }
 
-  _addBirthday() {
+  _addBirthday() async {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
       if (birthdate != null) {
-        dbmanager
-            .insertBirthday(BirthdayModel(
-                name: name, dateString: birthdate.toIso8601String()))
-            .then((id) async {
+        setState(() {
+          isLoading = true;
+        });
+        final id = await dbmanager.insertBirthday(
+            BirthdayModel(name: name, dateString: birthdate.toIso8601String()));
+
+        DateTime nextBirthday;
+
+        if (DateTime(DateTime.now().year, birthdate.month, birthdate.day)
+            .isAfter(DateTime.now())) {
+          nextBirthday =
+              DateTime(DateTime.now().year, birthdate.month, birthdate.day);
+
           await notificationPlugin.scheduleNotification(
-              id, birthdate, name, true);
+              id * 100, nextBirthday, name, true);
+        }
+
+        for (int i = 1; i < 50; i++) {
+          nextBirthday =
+              DateTime(DateTime.now().year + i, birthdate.month, birthdate.day);
+          notificationPlugin.scheduleNotification(
+              id * 100 + i, nextBirthday, name, true);
+        }
+        setState(() {
+          isLoading = false;
         });
 
         Navigator.push(
@@ -104,13 +126,13 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
           decoration: new BoxDecoration(
               color: Colors.white,
               borderRadius: new BorderRadius.only(
-                  topLeft: const Radius.circular(20.0),
-                  topRight: const Radius.circular(20.0))),
+                  topLeft: Radius.circular(20.r),
+                  topRight: Radius.circular(20.r))),
           padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom + 20.0,
-            top: 20.0,
-            left: 20.0,
-            right: 20.0,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 20.h,
+            top: 20.h,
+            left: 20.w,
+            right: 20.w,
           ),
           child: Form(
             key: formKey,
@@ -119,14 +141,15 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
               children: <Widget>[
                 TextFormField(
                   autofocus: true,
+                  focusNode: _nameNode,
                   decoration: InputDecoration(
                     contentPadding:
-                        EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
+                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 0.h),
                     filled: true,
                     fillColor: Colors.white,
                     hintText: 'Name of Person',
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
                   onSaved: (value) {
@@ -143,7 +166,7 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
                   },
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10.0),
+                  padding: EdgeInsets.symmetric(vertical: 15.h),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -159,6 +182,7 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
                       CustomButton(
                         text: 'Choose Date',
                         onClick: () {
+                          _nameNode.unfocus();
                           openDatePicker(context);
                         },
                       ),
@@ -166,7 +190,7 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
                   ),
                 ),
                 CustomButton(
-                  text: 'Add',
+                  text: isLoading ? 'Loading...' : 'Add',
                   onClick: _addBirthday,
                 ),
                 SizedBox(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:remember/models/note_model.dart';
 
 import 'package:remember/utilities/constants.dart';
@@ -57,7 +58,7 @@ class _NotesTabState extends State<NotesTab> {
       builder: (BuildContext context) {
         return AlertDialog(
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
           title: Text("Confirm Deletion"),
           content: Text("Are you sure you want to delete these notes?"),
           actions: [
@@ -74,7 +75,7 @@ class _NotesTabState extends State<NotesTab> {
     return ListView(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: EdgeInsets.all(15.r),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -90,7 +91,7 @@ class _NotesTabState extends State<NotesTab> {
                       },
                     )
                   : SizedBox(
-                      width: 30.0,
+                      width: 30.w,
                     ),
 
               // Title
@@ -114,7 +115,7 @@ class _NotesTabState extends State<NotesTab> {
                       child: Icon(
                         Icons.add,
                         color: Colors.white,
-                        size: 30.0,
+                        size: 30.r,
                       ),
                       onTap: () {
                         Navigator.pushNamed(context, AddNoteScreen.id);
@@ -124,12 +125,12 @@ class _NotesTabState extends State<NotesTab> {
           ),
         ),
         Container(
-          height: MediaQuery.of(context).size.height - 145.0,
+          height: MediaQuery.of(context).size.height - 157.h,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20.0),
-                topRight: Radius.circular(20.0)),
+                topLeft: Radius.circular(20.r),
+                topRight: Radius.circular(20.r)),
           ),
           child: SingleChildScrollView(
             child: FutureBuilder(
@@ -142,7 +143,7 @@ class _NotesTabState extends State<NotesTab> {
                   if (notes.length == 0) {
                     return Center(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 280.0),
+                        padding: EdgeInsets.symmetric(vertical: 280.h),
                         child: Text(
                           'No Notes Found',
                           style: kBody1TextStyle,
@@ -192,17 +193,17 @@ class _NotesTabState extends State<NotesTab> {
                                     _selectedIndexList.contains(index)
                                 ? Colors.white70
                                 : Colors.white,
-                            borderRadius: BorderRadius.circular(10.0),
+                            borderRadius: BorderRadius.circular(10.r),
                             boxShadow: [
                               BoxShadow(
-                                blurRadius: 5.0,
+                                blurRadius: 10.r,
                                 offset: Offset(0.0, 4.0),
                                 color: Colors.black.withOpacity(0.25),
                               ),
                             ],
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(10.0),
+                            padding: EdgeInsets.all(10.r),
                             child: Text(
                               notes[index].content,
                               style: kBody2TextStyle,
