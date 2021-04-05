@@ -56,6 +56,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
         style: kBody1TextStyle.copyWith(color: Colors.red),
       ),
       onPressed: () {
+        Navigator.of(context).pop();
         setState(() {
           isLoading = true;
         });
@@ -72,7 +73,6 @@ class _BirthdayTabState extends State<BirthdayTab> {
           isLoading = false;
           _changeSelection(enable: false, index: -1);
         });
-        Navigator.of(context).pop();
       },
     );
 
@@ -192,7 +192,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
                 if (birthList.length == 0) {
                   return Center(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 280.h),
+                      padding: EdgeInsets.symmetric(vertical: 310.h),
                       child: Text(
                         'No Birthdays Found',
                         style: kBody1TextStyle,

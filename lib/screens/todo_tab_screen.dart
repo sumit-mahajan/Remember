@@ -299,7 +299,7 @@ class _ToDoTabState extends State<ToDoTab> {
                                   ),
                                   child: Icon(
                                     visibleTextField ? Icons.remove : Icons.add,
-                                    size: 35.r,
+                                    size: 40.r,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -487,7 +487,7 @@ class _ToDoTabState extends State<ToDoTab> {
                                           decoration: InputDecoration(
                                             contentPadding:
                                                 EdgeInsets.symmetric(
-                                                    vertical: 0,
+                                                    vertical: 0.0,
                                                     horizontal: 10.w),
                                             hintStyle: kBody1TextStyle,
                                             filled: true,

@@ -143,7 +143,7 @@ class _NotesTabState extends State<NotesTab> {
                   if (notes.length == 0) {
                     return Center(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 280.h),
+                        padding: EdgeInsets.symmetric(vertical: 310.h),
                         child: Text(
                           'No Notes Found',
                           style: kBody1TextStyle,
