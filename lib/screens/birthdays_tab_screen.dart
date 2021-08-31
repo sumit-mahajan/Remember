@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:remember/models/birthday_model.dart';
 
-import 'package:remember/services/notifications_service.dart';
 import 'package:remember/utilities/constants.dart';
 import 'package:remember/services/database_service.dart';
 
@@ -17,23 +16,17 @@ class BirthdayTab extends StatefulWidget {
 }
 
 class _BirthdayTabState extends State<BirthdayTab> {
-  List<BirthdayModel> birthList = [];
+  List<BirthdayModel>? birthList = [];
   List<BirthdayModel> todayList = [];
   List<BirthdayModel> laterBirthList = [];
   var formatter = new DateFormat('dd-MM-yyyy');
   List<Padding> laterWidgets = [];
-  List<int> _selectedIndexList = List();
-  bool _selectionMode = false;
+  List<int?> _selectedIndexList = [];
+  bool? _selectionMode = false;
   DbManager dbmanager = DbManager();
   bool isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
-    notificationPlugin.setOnNotificationClick(onNotificationClick);
-  }
-
-  void _changeSelection({bool enable, int index}) {
+  void _changeSelection({bool? enable, int? index}) {
     _selectionMode = enable;
     _selectedIndexList.add(index);
     if (index == -1) {
@@ -61,13 +54,8 @@ class _BirthdayTabState extends State<BirthdayTab> {
           isLoading = true;
         });
         _selectedIndexList.sort();
-        for (int i in _selectedIndexList) {
-          dbmanager.deleteBirth(laterBirthList[i].id);
-          for (int j = 0; j < 50; j++) {
-            notificationPlugin
-                .cancelNotification(laterBirthList[i].id * 100 + j);
-            print(laterBirthList[i].id * 100 + j);
-          }
+        for (int? i in _selectedIndexList) {
+          dbmanager.deleteBirth(laterBirthList[i!].id);
         }
         setState(() {
           isLoading = false;
@@ -81,8 +69,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
           title: Text("Confirm Deletion"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -109,15 +96,13 @@ class _BirthdayTabState extends State<BirthdayTab> {
   void sortLater() {
     for (int i = 0; i < laterBirthList.length; i++) {
       laterBirthList[i].days = laterBirthList[i]
-          .dateofbirth
-          .difference(DateTime(laterBirthList[i].dateofbirth.year,
-              DateTime.now().month, DateTime.now().day))
+          .dateofbirth!
+          .difference(DateTime(laterBirthList[i].dateofbirth!.year, DateTime.now().month, DateTime.now().day))
           .inDays;
       if (laterBirthList[i].days < 0) {
         laterBirthList[i].days = laterBirthList[i]
-            .dateofbirth
-            .difference(DateTime(laterBirthList[i].dateofbirth.year - 1,
-                DateTime.now().month, DateTime.now().day))
+            .dateofbirth!
+            .difference(DateTime(laterBirthList[i].dateofbirth!.year - 1, DateTime.now().month, DateTime.now().day))
             .inDays;
       }
     }
@@ -132,7 +117,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            _selectionMode
+            _selectionMode!
                 ? IconButton(
                     icon: Icon(Icons.cancel),
                     color: Colors.white,
@@ -149,13 +134,12 @@ class _BirthdayTabState extends State<BirthdayTab> {
               'Birthdays',
               style: kTitleTextStyle,
             ),
-            _selectionMode
+            _selectionMode!
                 ? IconButton(
                     icon: Icon(Icons.delete),
                     color: Colors.white,
                     onPressed: () {
-                      if (_selectedIndexList.length > 0)
-                        showAlertDialog(context);
+                      if (_selectedIndexList.length > 0) showAlertDialog(context);
                     },
                   )
                 : GestureDetector(
@@ -189,7 +173,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
                 birthList = snapshot.data;
-                if (birthList.length == 0) {
+                if (birthList!.length == 0) {
                   return Center(
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 310.h),
@@ -200,19 +184,16 @@ class _BirthdayTabState extends State<BirthdayTab> {
                     ),
                   );
                 }
-                for (int i = 0; i < birthList.length; i++) {
-                  birthList[i].dateofbirth =
-                      DateTime.parse(birthList[i].dateString);
+                for (int i = 0; i < birthList!.length; i++) {
+                  birthList![i].dateofbirth = DateTime.parse(birthList![i].dateString!);
                 }
-                todayList = birthList
-                    .where((i) =>
-                        i.dateofbirth.month == DateTime.now().month &&
-                        i.dateofbirth.day == DateTime.now().day)
+                todayList = birthList!
+                    .where(
+                        (i) => i.dateofbirth!.month == DateTime.now().month && i.dateofbirth!.day == DateTime.now().day)
                     .toList();
-                laterBirthList = birthList
+                laterBirthList = birthList!
                     .where((i) =>
-                        !(i.dateofbirth.month == DateTime.now().month &&
-                            i.dateofbirth.day == DateTime.now().day))
+                        !(i.dateofbirth!.month == DateTime.now().month && i.dateofbirth!.day == DateTime.now().day))
                     .toList();
 
                 sortLater();
@@ -245,11 +226,9 @@ class _BirthdayTabState extends State<BirthdayTab> {
                                     child: Center(
                                       child: ClipOval(
                                         child: Material(
-                                          color:
-                                              kButtonFillColor, // button color
+                                          color: kButtonFillColor, // button color
                                           child: InkWell(
-                                            splashColor:
-                                                Colors.red, // inkwell color
+                                            splashColor: Colors.red, // inkwell color
                                             child: SizedBox(
                                                 width: 40,
                                                 height: 40,
@@ -265,20 +244,15 @@ class _BirthdayTabState extends State<BirthdayTab> {
                                   ),
                                   SizedBox(width: 10.w),
                                   Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        todayList[i].name,
+                                        todayList[i].name!,
                                         style: kBody1TextStyle,
                                       ),
                                       Text(
                                         'Turns ' +
-                                            (DateTime.now().year -
-                                                    todayList[i]
-                                                        .dateofbirth
-                                                        .year)
-                                                .toString() +
+                                            (DateTime.now().year - todayList[i].dateofbirth!.year).toString() +
                                             ' years old',
                                         style: kSubtitleTextStyle,
                                       ),
@@ -305,7 +279,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
                           itemBuilder: (context, i) {
                             return GestureDetector(
                               onTap: () {
-                                if (_selectionMode) {
+                                if (_selectionMode!) {
                                   setState(() {
                                     if (_selectedIndexList.contains(i)) {
                                       _selectedIndexList.remove(i);
@@ -316,7 +290,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
                                 }
                               },
                               onLongPress: () {
-                                if (!_selectionMode) {
+                                if (!_selectionMode!) {
                                   setState(() {
                                     _changeSelection(enable: true, index: i);
                                   });
@@ -324,8 +298,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
                               },
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: _selectionMode &&
-                                          _selectedIndexList.contains(i)
+                                  color: _selectionMode! && _selectedIndexList.contains(i)
                                       ? Colors.lightBlueAccent
                                       : Colors.white,
                                   borderRadius: BorderRadius.circular(10.r),
@@ -337,41 +310,33 @@ class _BirthdayTabState extends State<BirthdayTab> {
                                       width: 75.w,
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.baseline,
+                                        crossAxisAlignment: CrossAxisAlignment.baseline,
                                         textBaseline: TextBaseline.alphabetic,
                                         children: <Widget>[
                                           Text(
                                             laterBirthList[i].days.toString(),
-                                            style: kBoldTextStyle.copyWith(
-                                                fontSize: 28.sp),
+                                            style: kBoldTextStyle.copyWith(fontSize: 28.sp),
                                           ),
                                           Text(
                                             'days',
-                                            style: kBody1TextStyle.copyWith(
-                                                fontSize: 14.sp),
+                                            style: kBody1TextStyle.copyWith(fontSize: 14.sp),
                                           ),
                                         ],
                                       ),
                                     ),
                                     SizedBox(width: 10.w),
                                     Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          laterBirthList[i].name,
+                                          laterBirthList[i].name!,
                                           style: kBody1TextStyle,
                                         ),
                                         SizedBox(
                                           height: 3.h,
                                         ),
                                         Text(
-                                          'BirthDate: ' +
-                                              formatter
-                                                  .format(laterBirthList[i]
-                                                      .dateofbirth)
-                                                  .toString(),
+                                          'BirthDate: ' + formatter.format(laterBirthList[i].dateofbirth!).toString(),
                                           style: kSubtitleTextStyle,
                                         ),
                                       ],

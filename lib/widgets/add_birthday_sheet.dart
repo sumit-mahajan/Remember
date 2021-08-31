@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:remember/models/birthday_model.dart';
 import 'package:remember/screens/tabs_screen.dart';
-import 'package:remember/services/notifications_service.dart';
 import 'package:remember/services/database_service.dart';
 import 'package:remember/utilities/constants.dart';
 import 'package:remember/widgets/custom_button.dart';
@@ -17,8 +16,8 @@ class AddbirthdaySheet extends StatefulWidget {
 
 class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
   final formKey = GlobalKey<FormState>();
-  String name;
-  DateTime birthdate;
+  String? name;
+  DateTime? birthdate;
   var formatter = new DateFormat('yyyy-MM-dd');
   DbManager dbmanager = new DbManager();
   bool f = false;
@@ -28,10 +27,10 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
   openDatePicker(BuildContext context) {
     showDatePicker(
         context: context,
-        initialDate: birthdate == null ? DateTime.now() : birthdate,
+        initialDate: birthdate == null ? DateTime.now() : birthdate!,
         firstDate: DateTime(1900),
         lastDate: DateTime.now(),
-        builder: (BuildContext context, Widget child) {
+        builder: (BuildContext context, Widget? child) {
           const MaterialColor buttonTextColor = const MaterialColor(
             0xFF4A5BF6,
             const <int, Color>{
@@ -52,7 +51,7 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
                 primarySwatch: buttonTextColor,
                 primaryColor: const Color(0xFF4A5BF6),
                 accentColor: const Color(0xFF4A5BF6)),
-            child: child,
+            child: child!,
           );
         }).then((date) {
       setState(() {
@@ -62,32 +61,20 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
   }
 
   _addBirthday() async {
-    if (formKey.currentState.validate()) {
-      formKey.currentState.save();
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
       if (birthdate != null) {
         setState(() {
           isLoading = true;
         });
-        final id = await dbmanager.insertBirthday(
-            BirthdayModel(name: name, dateString: birthdate.toIso8601String()));
+        final id = await dbmanager.insertBirthday(BirthdayModel(name: name, dateString: birthdate!.toIso8601String()));
 
         DateTime nextBirthday;
 
-        if (DateTime(DateTime.now().year, birthdate.month, birthdate.day)
-            .isAfter(DateTime.now())) {
-          nextBirthday =
-              DateTime(DateTime.now().year, birthdate.month, birthdate.day);
-
-          await notificationPlugin.scheduleNotification(
-              id * 100, nextBirthday, name, true);
+        if (DateTime(DateTime.now().year, birthdate!.month, birthdate!.day).isAfter(DateTime.now())) {
+          nextBirthday = DateTime(DateTime.now().year, birthdate!.month, birthdate!.day);
         }
 
-        for (int i = 1; i < 50; i++) {
-          nextBirthday =
-              DateTime(DateTime.now().year + i, birthdate.month, birthdate.day);
-          notificationPlugin.scheduleNotification(
-              id * 100 + i, nextBirthday, name, true);
-        }
         setState(() {
           isLoading = false;
         });
@@ -107,14 +94,9 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
     }
   }
 
-  onNotificationClick(String payload) {
-    print(payload);
-  }
-
   @override
   void initState() {
     super.initState();
-    notificationPlugin.setOnNotificationClick(onNotificationClick);
   }
 
   @override
@@ -125,9 +107,7 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
         child: Container(
           decoration: new BoxDecoration(
               color: Colors.white,
-              borderRadius: new BorderRadius.only(
-                  topLeft: Radius.circular(20.r),
-                  topRight: Radius.circular(20.r))),
+              borderRadius: new BorderRadius.only(topLeft: Radius.circular(20.r), topRight: Radius.circular(20.r))),
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom + 20.h,
             top: 20.h,
@@ -143,8 +123,7 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
                   autofocus: true,
                   focusNode: _nameNode,
                   decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 0.h),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 0.h),
                     filled: true,
                     fillColor: Colors.white,
                     hintText: 'Name of Person',
@@ -156,8 +135,7 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
                     name = value;
                   },
                   validator: (input) {
-                    if (input == '' ||
-                        input.toLowerCase() == input.toUpperCase()) {
+                    if (input == '' || input!.toLowerCase() == input.toUpperCase()) {
                       return 'Name can\'t be empty';
                     } else if (input.length > 25) {
                       return 'Name should be within 25 characters';
@@ -171,13 +149,8 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        birthdate == null
-                            ? 'Please select Birthdate'
-                            : formatter.format(birthdate),
-                        style: kBody1TextStyle.copyWith(
-                            color: birthdate == null && f
-                                ? Colors.red
-                                : Colors.black),
+                        birthdate == null ? 'Please select Birthdate' : formatter.format(birthdate!),
+                        style: kBody1TextStyle.copyWith(color: birthdate == null && f ? Colors.red : Colors.black),
                       ),
                       CustomButton(
                         text: 'Choose Date',

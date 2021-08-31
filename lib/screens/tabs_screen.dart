@@ -8,7 +8,7 @@ import 'package:remember/utilities/constants.dart';
 
 class TabsScreen extends StatefulWidget {
   static String id = 'tabs_screen';
-  final int preSelected;
+  final int? preSelected;
   TabsScreen({this.preSelected});
 
   @override
@@ -16,7 +16,7 @@ class TabsScreen extends StatefulWidget {
 }
 
 class _TabsScreenState extends State<TabsScreen> {
-  int selectedTab;
+  int? selectedTab;
   List<Widget> tabsList = [
     ToDoTab(),
     NotesTab(),
@@ -40,7 +40,7 @@ class _TabsScreenState extends State<TabsScreen> {
         backgroundColor: Colors.white,
         buttonBackgroundColor: kAppPrimaryColor,
         color: kNavBarColor,
-        index: selectedTab,
+        index: selectedTab!,
         height: 50,
         items: <Widget>[
           Icon(
@@ -74,7 +74,7 @@ class _TabsScreenState extends State<TabsScreen> {
         ),
         animationCurve: Curves.bounceInOut,
       ),
-      body: tabsList[selectedTab],
+      body: tabsList[selectedTab!],
     );
   }
 }

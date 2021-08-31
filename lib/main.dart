@@ -15,7 +15,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: Size(375, 812),
-      allowFontScaling: false,
       builder: () => MaterialApp(
         theme: ThemeData.light().copyWith(
           primaryColor: Colors.lightBlue, //Color(0xFF00B4EE)

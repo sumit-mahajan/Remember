@@ -7,7 +7,7 @@ import 'package:remember/models/note_model.dart';
 import 'package:remember/models/todo_model.dart';
 
 class DbManager {
-  Database _database;
+  Database? _database;
 
   Future openDb() async {
     if (_database == null) {
@@ -30,7 +30,7 @@ class DbManager {
 
   Future<List<TodoModel>> getToDoList() async {
     await openDb();
-    final List<Map<String, dynamic>> maps = await _database.query('todoTable');
+    final List<Map<String, dynamic>> maps = await _database!.query('todoTable');
     List<TodoModel> newList = [];
     for (int i = 0; i < maps.length; i++) {
       newList.add(TodoModel.fromMap(maps[i]));
@@ -40,23 +40,23 @@ class DbManager {
 
   Future<int> insertToDo(TodoModel todo) async {
     await openDb();
-    return await _database.insert('todoTable', todo.toMap());
+    return await _database!.insert('todoTable', todo.toMap());
   }
 
   Future<int> updateToDo(TodoModel todo) async {
     await openDb();
-    return await _database.update('todoTable', todo.toMap(), where: "id = ?", whereArgs: [todo.id]);
+    return await _database!.update('todoTable', todo.toMap(), where: "id = ?", whereArgs: [todo.id]);
   }
 
-  Future<void> deleteToDo(int id) async {
+  Future<void> deleteToDo(int? id) async {
     await openDb();
-    await _database.delete('todoTable', where: "id = ?", whereArgs: [id]);
+    await _database!.delete('todoTable', where: "id = ?", whereArgs: [id]);
   }
 
 //Note
   Future<List<NoteModel>> getNoteList() async {
     await openDb();
-    final List<Map<String, dynamic>> maps = await _database.query('noteTable');
+    final List<Map<String, dynamic>> maps = await _database!.query('noteTable');
     List<NoteModel> newList = [];
     for (int i = 0; i < maps.length; i++) {
       newList.add(NoteModel.fromMap(maps[i]));
@@ -66,23 +66,23 @@ class DbManager {
 
   Future<int> insertNote(NoteModel newnote) async {
     await openDb();
-    return await _database.insert('noteTable', newnote.toMap());
+    return await _database!.insert('noteTable', newnote.toMap());
   }
 
   Future<int> updateNote(NoteModel newnote) async {
     await openDb();
-    return await _database.update('noteTable', newnote.toMap(), where: "id = ?", whereArgs: [newnote.id]);
+    return await _database!.update('noteTable', newnote.toMap(), where: "id = ?", whereArgs: [newnote.id]);
   }
 
-  Future<void> deleteNote(int id) async {
+  Future<void> deleteNote(int? id) async {
     await openDb();
-    await _database.delete('noteTable', where: "id = ?", whereArgs: [id]);
+    await _database!.delete('noteTable', where: "id = ?", whereArgs: [id]);
   }
 
 //Birthday
   Future<List<BirthdayModel>> getBirthList() async {
     await openDb();
-    final List<Map<String, dynamic>> maps = await _database.query('birthTable');
+    final List<Map<String, dynamic>> maps = await _database!.query('birthTable');
     List<BirthdayModel> newList = [];
     for (int i = 0; i < maps.length; i++) {
       newList.add(BirthdayModel.fromMap(maps[i]));
@@ -92,11 +92,11 @@ class DbManager {
 
   Future<int> insertBirthday(BirthdayModel sb) async {
     await openDb();
-    return await _database.insert('birthTable', sb.toMap());
+    return await _database!.insert('birthTable', sb.toMap());
   }
 
-  Future<void> deleteBirth(int id) async {
+  Future<void> deleteBirth(int? id) async {
     await openDb();
-    await _database.delete('birthTable', where: "id = ?", whereArgs: [id]);
+    await _database!.delete('birthTable', where: "id = ?", whereArgs: [id]);
   }
 }

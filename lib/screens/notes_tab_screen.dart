@@ -14,12 +14,12 @@ class NotesTab extends StatefulWidget {
 }
 
 class _NotesTabState extends State<NotesTab> {
-  List<int> _selectedIndexList = List();
-  bool _selectionMode = false;
-  List<NoteModel> notes = [];
+  List<int?> _selectedIndexList = [];
+  bool? _selectionMode = false;
+  List<NoteModel>? notes = [];
   DbManager dbmanager = new DbManager();
 
-  void _changeSelection({bool enable, int index}) {
+  void _changeSelection({bool? enable, int? index}) {
     _selectionMode = enable;
     _selectedIndexList.add(index);
     if (index == -1) {
@@ -43,8 +43,8 @@ class _NotesTabState extends State<NotesTab> {
       onPressed: () {
         Navigator.of(context).pop();
         _selectedIndexList.sort();
-        for (int i in _selectedIndexList) {
-          dbmanager.deleteNote(notes[i].id);
+        for (int? i in _selectedIndexList) {
+          dbmanager.deleteNote(notes![i!].id);
         }
         setState(() {
           _changeSelection(enable: false, index: -1);
@@ -57,8 +57,7 @@ class _NotesTabState extends State<NotesTab> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
           title: Text("Confirm Deletion"),
           content: Text("Are you sure you want to delete these notes?"),
           actions: [
@@ -80,7 +79,7 @@ class _NotesTabState extends State<NotesTab> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               // Cancel Button
-              _selectionMode
+              _selectionMode!
                   ? IconButton(
                       icon: Icon(Icons.cancel),
                       color: Colors.white,
@@ -101,13 +100,12 @@ class _NotesTabState extends State<NotesTab> {
               ),
 
               // Delete Button
-              _selectionMode
+              _selectionMode!
                   ? IconButton(
                       icon: Icon(Icons.delete),
                       color: Colors.white,
                       onPressed: () {
-                        if (_selectedIndexList.length > 0)
-                          showAlertDialog(context);
+                        if (_selectedIndexList.length > 0) showAlertDialog(context);
                       },
                     )
                   // Add New Note Button
@@ -128,9 +126,7 @@ class _NotesTabState extends State<NotesTab> {
           height: MediaQuery.of(context).size.height - 157.h,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20.r),
-                topRight: Radius.circular(20.r)),
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(20.r), topRight: Radius.circular(20.r)),
           ),
           child: SingleChildScrollView(
             child: FutureBuilder(
@@ -140,7 +136,7 @@ class _NotesTabState extends State<NotesTab> {
                   notes = snapshot.data;
 
                   // Empty note list
-                  if (notes.length == 0) {
+                  if (notes!.length == 0) {
                     return Center(
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 310.h),
@@ -161,16 +157,16 @@ class _NotesTabState extends State<NotesTab> {
                     crossAxisSpacing: 15,
                     mainAxisSpacing: 15,
                     crossAxisCount: 2,
-                    children: List.generate(notes.length, (index) {
+                    children: List.generate(notes!.length, (index) {
                       return GestureDetector(
                         onLongPress: () {
-                          _selectionMode
+                          _selectionMode!
                               ? _changeSelection(enable: false, index: -1)
                               : _changeSelection(enable: true, index: index);
                           setState(() {});
                         },
                         onTap: () {
-                          _selectionMode
+                          _selectionMode!
                               ? setState(() {
                                   if (_selectedIndexList.contains(index)) {
                                     _selectedIndexList.remove(index);
@@ -182,30 +178,30 @@ class _NotesTabState extends State<NotesTab> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => AddNoteScreen(
-                                      note: notes[index],
+                                      note: notes![index],
                                     ),
                                   ),
                                 );
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                            color: _selectionMode &&
-                                    _selectedIndexList.contains(index)
-                                ? Colors.white70
-                                : Colors.white,
+                            color:
+                                _selectionMode! && _selectedIndexList.contains(index) ? Colors.white60 : Colors.white,
                             borderRadius: BorderRadius.circular(10.r),
                             boxShadow: [
-                              BoxShadow(
-                                blurRadius: 10.r,
-                                offset: Offset(0.0, 4.0),
-                                color: Colors.black.withOpacity(0.25),
-                              ),
+                              _selectionMode! && _selectedIndexList.contains(index)
+                                  ? BoxShadow()
+                                  : BoxShadow(
+                                      blurRadius: 10.r,
+                                      offset: Offset(0, 0.2),
+                                      color: Colors.black.withOpacity(0.25),
+                                    ),
                             ],
                           ),
                           child: Padding(
                             padding: EdgeInsets.all(10.r),
                             child: Text(
-                              notes[index].content,
+                              notes![index].content!,
                               style: kBody2TextStyle,
                               overflow: TextOverflow.ellipsis,
                             ),

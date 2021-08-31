@@ -1,9 +1,9 @@
 class BirthdayModel {
-  final int id;
-  final String name;
-  DateTime dateofbirth;
-  final String dateString;
-  int days;
+  final int? id;
+  final String? name;
+  DateTime? dateofbirth;
+  final String? dateString;
+  late int days;
 
   BirthdayModel({this.name, this.dateofbirth, this.id, this.dateString});
 

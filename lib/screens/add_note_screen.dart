@@ -9,7 +9,7 @@ import 'package:remember/models/note_model.dart';
 
 class AddNoteScreen extends StatefulWidget {
   static const id = 'add_note';
-  final NoteModel note;
+  final NoteModel? note;
 
   AddNoteScreen({this.note});
 
@@ -19,7 +19,7 @@ class AddNoteScreen extends StatefulWidget {
 
 class _AddNoteScreenState extends State<AddNoteScreen> {
   final DbManager dbmanager = new DbManager();
-  NoteModel newNote;
+  NoteModel? newNote;
 
   @override
   void initState() {
@@ -59,15 +59,15 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                 shape: new RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.r)),
                 onPressed: () {
-                  if (newNote.content != '' &&
-                      newNote.content.toLowerCase() !=
-                          newNote.content.toUpperCase()) {
+                  if (newNote!.content != '' &&
+                      newNote!.content!.toLowerCase() !=
+                          newNote!.content!.toUpperCase()) {
                     if (widget.note == null) {
-                      dbmanager.insertNote(newNote).then((id) => {
+                      dbmanager.insertNote(newNote!).then((id) => {
                             print('Note added at $id'),
                           });
                     } else {
-                      dbmanager.updateNote(newNote).then((id) => {
+                      dbmanager.updateNote(newNote!).then((id) => {
                             print('Note updated at $id'),
                           });
                     }
@@ -87,7 +87,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
         ],
       ),
       body: TextFormField(
-        initialValue: newNote.content,
+        initialValue: newNote!.content,
         decoration: InputDecoration(
             hintText: 'Tap here to Write',
             hintStyle: kBody2TextStyle,
@@ -96,7 +96,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
         maxLines: null,
         style: kBody2TextStyle,
         onChanged: (value) {
-          newNote.content = value;
+          newNote!.content = value;
         },
       ),
     );

@@ -1,6 +1,6 @@
 class NoteModel {
-  int id;
-  String content;
+  int? id;
+  String? content;
 
   NoteModel({this.id, this.content});
 
