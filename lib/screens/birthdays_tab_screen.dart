@@ -7,6 +7,7 @@ import 'package:remember/utilities/constants.dart';
 import 'package:remember/services/database_service.dart';
 
 import 'package:remember/widgets/add_birthday_sheet.dart';
+import 'package:remember/widgets/app_scaffold.dart';
 
 class BirthdayTab extends StatefulWidget {
   //static const id = 'birthdays_page';
@@ -111,256 +112,232 @@ class _BirthdayTabState extends State<BirthdayTab> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(children: <Widget>[
-      Padding(
-        padding: EdgeInsets.all(15.r),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            _selectionMode!
-                ? IconButton(
-                    icon: Icon(Icons.cancel),
-                    color: Colors.white,
-                    onPressed: () {
-                      setState(() {
-                        _changeSelection(enable: false, index: -1);
-                      });
-                    },
-                  )
-                : SizedBox(
-                    width: 30.w,
-                  ),
-            Text(
-              'Birthdays',
-              style: kTitleTextStyle,
+    return AppScaffold(
+      leftButton: _selectionMode!
+          ? IconButton(
+              icon: Icon(Icons.cancel),
+              color: Colors.white,
+              onPressed: () {
+                setState(() {
+                  _changeSelection(enable: false, index: -1);
+                });
+              },
+            )
+          : SizedBox(
+              width: 30.w,
             ),
-            _selectionMode!
-                ? IconButton(
-                    icon: Icon(Icons.delete),
-                    color: Colors.white,
-                    onPressed: () {
-                      if (_selectedIndexList.length > 0) showAlertDialog(context);
-                    },
-                  )
-                : GestureDetector(
-                    child: Icon(
-                      Icons.add,
-                      color: Colors.white,
-                      size: 30.r,
-                    ),
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) => AddbirthdaySheet(),
-                      );
-                    },
+      title: 'Birthdays',
+      rightButton: _selectionMode!
+          ? IconButton(
+              icon: Icon(Icons.delete),
+              color: Colors.white,
+              onPressed: () {
+                if (_selectedIndexList.length > 0) showAlertDialog(context);
+              },
+            )
+          : GestureDetector(
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 30.r,
+              ),
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) => AddbirthdaySheet(),
+                );
+              },
+            ),
+      childWidget: FutureBuilder(
+        future: dbmanager.getBirthList(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            birthList = snapshot.data;
+            if (birthList!.length == 0) {
+              return Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 310.h),
+                  child: Text(
+                    'No Birthdays Found',
+                    style: kBody1TextStyle,
                   ),
-          ],
-        ),
-      ),
-      Container(
-        height: MediaQuery.of(context).size.height - 157.h,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.r),
-            topRight: Radius.circular(20.r),
-          ),
-        ),
-        child: SingleChildScrollView(
-          child: FutureBuilder(
-            future: dbmanager.getBirthList(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                birthList = snapshot.data;
-                if (birthList!.length == 0) {
-                  return Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 310.h),
-                      child: Text(
-                        'No Birthdays Found',
-                        style: kBody1TextStyle,
-                      ),
-                    ),
-                  );
-                }
-                for (int i = 0; i < birthList!.length; i++) {
-                  birthList![i].dateofbirth = DateTime.parse(birthList![i].dateString!);
-                }
-                todayList = birthList!
-                    .where(
-                        (i) => i.dateofbirth!.month == DateTime.now().month && i.dateofbirth!.day == DateTime.now().day)
-                    .toList();
-                laterBirthList = birthList!
-                    .where((i) =>
-                        !(i.dateofbirth!.month == DateTime.now().month && i.dateofbirth!.day == DateTime.now().day))
-                    .toList();
+                ),
+              );
+            }
+            for (int i = 0; i < birthList!.length; i++) {
+              birthList![i].dateofbirth = DateTime.parse(birthList![i].dateString!);
+            }
+            todayList = birthList!
+                .where((i) => i.dateofbirth!.month == DateTime.now().month && i.dateofbirth!.day == DateTime.now().day)
+                .toList();
+            laterBirthList = birthList!
+                .where(
+                    (i) => !(i.dateofbirth!.month == DateTime.now().month && i.dateofbirth!.day == DateTime.now().day))
+                .toList();
 
-                sortLater();
-                return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: Column(
-                    children: <Widget>[
-                      todayList.length != 0
-                          ? Padding(
-                              padding: EdgeInsets.only(top: 15.h),
-                              child: Text(
-                                'Today',
-                                style: kBoldTextStyle,
-                              ),
-                            )
-                          : Container(),
-                      ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: todayList.length,
-                          itemBuilder: (context, i) {
-                            return Padding(
-                              padding: EdgeInsets.only(top: 15.h),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 75.w,
-                                    child: Center(
-                                      child: ClipOval(
-                                        child: Material(
-                                          color: kButtonFillColor, // button color
-                                          child: InkWell(
-                                            splashColor: Colors.red, // inkwell color
-                                            child: SizedBox(
-                                                width: 40,
-                                                height: 40,
-                                                child: Icon(
-                                                  Icons.cake,
-                                                  color: Colors.white,
-                                                )),
-                                            onTap: () {},
-                                          ),
-                                        ),
+            sortLater();
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Column(
+                children: <Widget>[
+                  todayList.length != 0
+                      ? Padding(
+                          padding: EdgeInsets.only(top: 15.h),
+                          child: Text(
+                            'Today',
+                            style: kBoldTextStyle,
+                          ),
+                        )
+                      : Container(),
+                  ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: todayList.length,
+                      itemBuilder: (context, i) {
+                        return Padding(
+                          padding: EdgeInsets.only(top: 15.h),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 75.w,
+                                child: Center(
+                                  child: ClipOval(
+                                    child: Material(
+                                      color: kButtonFillColor, // button color
+                                      child: InkWell(
+                                        splashColor: Colors.red, // inkwell color
+                                        child: SizedBox(
+                                            width: 40,
+                                            height: 40,
+                                            child: Icon(
+                                              Icons.cake,
+                                              color: Colors.white,
+                                            )),
+                                        onTap: () {},
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: 10.w),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
+                                ),
+                              ),
+                              SizedBox(width: 10.w),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    todayList[i].name!,
+                                    style: kBody1TextStyle,
+                                  ),
+                                  Text(
+                                    'Turns ' +
+                                        (DateTime.now().year - todayList[i].dateofbirth!.year).toString() +
+                                        ' years old',
+                                    style: kSubtitleTextStyle,
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        );
+                      }),
+                  laterBirthList.length > 0
+                      ? Padding(
+                          padding: EdgeInsets.symmetric(vertical: 15.h),
+                          child: Text(
+                            'Later',
+                            style: kBoldTextStyle,
+                          ),
+                        )
+                      : Container(),
+                  ListView.separated(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: laterBirthList.length,
+                      itemBuilder: (context, i) {
+                        return GestureDetector(
+                          onTap: () {
+                            if (_selectionMode!) {
+                              setState(() {
+                                if (_selectedIndexList.contains(i)) {
+                                  _selectedIndexList.remove(i);
+                                } else {
+                                  _selectedIndexList.add(i);
+                                }
+                              });
+                            }
+                          },
+                          onLongPress: () {
+                            if (!_selectionMode!) {
+                              setState(() {
+                                _changeSelection(enable: true, index: i);
+                              });
+                            }
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: _selectionMode! && _selectedIndexList.contains(i)
+                                  ? Colors.lightBlueAccent
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 75.w,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                                    textBaseline: TextBaseline.alphabetic,
+                                    children: <Widget>[
                                       Text(
-                                        todayList[i].name!,
-                                        style: kBody1TextStyle,
+                                        laterBirthList[i].days.toString(),
+                                        style: kBoldTextStyle.copyWith(fontSize: 28.sp),
                                       ),
                                       Text(
-                                        'Turns ' +
-                                            (DateTime.now().year - todayList[i].dateofbirth!.year).toString() +
-                                            ' years old',
-                                        style: kSubtitleTextStyle,
+                                        'days',
+                                        style: kBody1TextStyle.copyWith(fontSize: 14.sp),
                                       ),
                                     ],
-                                  )
-                                ],
-                              ),
-                            );
-                          }),
-                      laterBirthList.length > 0
-                          ? Padding(
-                              padding: EdgeInsets.symmetric(vertical: 15.h),
-                              child: Text(
-                                'Later',
-                                style: kBoldTextStyle,
-                              ),
-                            )
-                          : Container(),
-                      ListView.separated(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: laterBirthList.length,
-                          itemBuilder: (context, i) {
-                            return GestureDetector(
-                              onTap: () {
-                                if (_selectionMode!) {
-                                  setState(() {
-                                    if (_selectedIndexList.contains(i)) {
-                                      _selectedIndexList.remove(i);
-                                    } else {
-                                      _selectedIndexList.add(i);
-                                    }
-                                  });
-                                }
-                              },
-                              onLongPress: () {
-                                if (!_selectionMode!) {
-                                  setState(() {
-                                    _changeSelection(enable: true, index: i);
-                                  });
-                                }
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: _selectionMode! && _selectedIndexList.contains(i)
-                                      ? Colors.lightBlueAccent
-                                      : Colors.white,
-                                  borderRadius: BorderRadius.circular(10.r),
+                                  ),
                                 ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
+                                SizedBox(width: 10.w),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      width: 75.w,
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                                        textBaseline: TextBaseline.alphabetic,
-                                        children: <Widget>[
-                                          Text(
-                                            laterBirthList[i].days.toString(),
-                                            style: kBoldTextStyle.copyWith(fontSize: 28.sp),
-                                          ),
-                                          Text(
-                                            'days',
-                                            style: kBody1TextStyle.copyWith(fontSize: 14.sp),
-                                          ),
-                                        ],
-                                      ),
+                                    Text(
+                                      laterBirthList[i].name!,
+                                      style: kBody1TextStyle,
                                     ),
-                                    SizedBox(width: 10.w),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          laterBirthList[i].name!,
-                                          style: kBody1TextStyle,
-                                        ),
-                                        SizedBox(
-                                          height: 3.h,
-                                        ),
-                                        Text(
-                                          'BirthDate: ' + formatter.format(laterBirthList[i].dateofbirth!).toString(),
-                                          style: kSubtitleTextStyle,
-                                        ),
-                                      ],
-                                    )
+                                    SizedBox(
+                                      height: 3.h,
+                                    ),
+                                    Text(
+                                      'BirthDate: ' + formatter.format(laterBirthList[i].dateofbirth!).toString(),
+                                      style: kSubtitleTextStyle,
+                                    ),
                                   ],
-                                ),
-                              ),
-                            );
-                          },
-                          separatorBuilder: (context, i) {
-                            return SizedBox(
-                              height: 15.h,
-                            );
-                          }),
-                    ],
-                  ),
-                );
-              } else {
-                return Container();
-              }
-            },
-          ),
-        ),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context, i) {
+                        return SizedBox(
+                          height: 15.h,
+                        );
+                      }),
+                ],
+              ),
+            );
+          } else {
+            return Container();
+          }
+        },
       ),
-    ]);
+    );
   }
 }

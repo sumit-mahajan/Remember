@@ -1,12 +1,37 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import 'locator.dart';
+import 'locator.dart' as di;
 
 import 'package:remember/screens/add_note_screen.dart';
 import 'package:remember/screens/tabs_screen.dart';
 import 'package:remember/widgets/add_birthday_sheet.dart';
 
-void main() {
-  runApp(MyApp());
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await di.init();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        // ChangeNotifierProvider<ThemeProvider>(
+        //   create: (context) => locator<ThemeProvider>(),
+        // ),
+        // ChangeNotifierProvider<AuthProvider>(
+        //   create: (context) => locator<AuthProvider>(),
+        // ),
+        StreamProvider<User?>(
+          initialData: null,
+          create: (context) => FirebaseAuth.instance.userChanges(),
+        ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

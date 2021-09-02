@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "338101207483",
+    "project_id": "remember-12c48",
+    "storage_bucket": "remember-12c48.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338101207483:android:6486e535e9f99cc3d5849e",
+        "android_client_info": {
+          "package_name": "com.sumit.remember"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "338101207483-47gcq026f724sdtrjqdjvhcn87e7c4i0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sumit.remember",
+            "certificate_hash": "902b24a44a13100bee45665a5994d8e082011c9b"
+          }
+        },
+        {
+          "client_id": "338101207483-5dq4kvke1u3ofuom4mul3q8hav82eroc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5gfYI9PgQG5XIyUG1QBQM4vCDUvCM2Mg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "338101207483-5dq4kvke1u3ofuom4mul3q8hav82eroc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
