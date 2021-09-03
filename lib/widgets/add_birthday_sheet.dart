@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:remember/models/birthday_model.dart';
+import 'package:remember/providers/birthday_provider.dart';
 import 'package:remember/screens/tabs_screen.dart';
-import 'package:remember/services/database_service.dart';
 import 'package:remember/utilities/constants.dart';
 import 'package:remember/widgets/custom_button.dart';
 
@@ -16,12 +17,11 @@ class AddbirthdaySheet extends StatefulWidget {
 
 class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
   final formKey = GlobalKey<FormState>();
+  var formatter = new DateFormat('dd-MM-yyyy');
+  FocusNode _nameNode = FocusNode();
   String? name;
   DateTime? birthdate;
-  var formatter = new DateFormat('yyyy-MM-dd');
-  DbManager dbmanager = new DbManager();
-  bool f = false;
-  FocusNode _nameNode = FocusNode();
+  bool flag = false;
   bool isLoading = false;
 
   openDatePicker(BuildContext context) {
@@ -64,20 +64,8 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
       if (birthdate != null) {
-        setState(() {
-          isLoading = true;
-        });
-        final id = await dbmanager.insertBirthday(BirthdayModel(name: name, dateString: birthdate!.toIso8601String()));
-
-        DateTime nextBirthday;
-
-        if (DateTime(DateTime.now().year, birthdate!.month, birthdate!.day).isAfter(DateTime.now())) {
-          nextBirthday = DateTime(DateTime.now().year, birthdate!.month, birthdate!.day);
-        }
-
-        setState(() {
-          isLoading = false;
-        });
+        await Provider.of<BirthdayProvider>(context, listen: false)
+            .addBirthday(BirthdayModel(name: name, dateString: birthdate!.toIso8601String()));
 
         Navigator.push(
           context,
@@ -88,15 +76,10 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
           ),
         );
       } else {
-        f = true;
+        flag = true;
         setState(() {});
       }
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
@@ -150,7 +133,7 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
                     children: <Widget>[
                       Text(
                         birthdate == null ? 'Please select Birthdate' : formatter.format(birthdate!),
-                        style: kBody1TextStyle.copyWith(color: birthdate == null && f ? Colors.red : Colors.black),
+                        style: kBody1TextStyle.copyWith(color: birthdate == null && flag ? Colors.red : Colors.black),
                       ),
                       CustomButton(
                         text: 'Choose Date',

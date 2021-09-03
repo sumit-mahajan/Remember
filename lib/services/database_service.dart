@@ -6,7 +6,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:remember/models/note_model.dart';
 import 'package:remember/models/todo_model.dart';
 
-class DbManager {
+class LocalDbService {
   Database? _database;
 
   Future openDb() async {

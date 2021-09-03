@@ -1,3 +1,7 @@
+import 'package:remember/providers/birthday_provider.dart';
+import 'package:remember/providers/note_provider.dart';
+import 'package:remember/providers/todo_provider.dart';
+import 'package:remember/services/database_service.dart';
 import 'package:uuid/uuid.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,20 +13,16 @@ final locator = GetIt.instance;
 Future<void> init() async {
   //Providers
 
-  // locator.registerLazySingleton(() =>
-  //     ProfileProvider(gProvider: locator(), dataService: locator(), dailyProvider: locator()));
+  locator.registerLazySingleton(() => TodoProvider(prefs: locator(), localDbService: locator()));
+  locator.registerLazySingleton(() => NoteProvider(localDbService: locator()));
+  locator.registerLazySingleton(() => BirthdayProvider(localDbService: locator()));
 
   //Services
 
-  // locator.registerLazySingleton(() => ProfileDataService(
-  //       store: locator(),
-  //       auth: locator(),
-  //       prefs: locator(),
-  //     ));
-
-  //External
-
+  locator.registerLazySingleton(() => LocalDbService());
   // locator.registerLazySingleton(() => NotificationService(locator()));
+
+  //Variables
 
   final prefs = await SharedPreferences.getInstance();
   locator.registerLazySingleton(() => prefs);

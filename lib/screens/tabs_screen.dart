@@ -1,5 +1,9 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:remember/providers/birthday_provider.dart';
+import 'package:remember/providers/note_provider.dart';
+import 'package:remember/providers/todo_provider.dart';
 import 'package:remember/screens/birthdays_tab_screen.dart';
 import 'package:remember/screens/events_tab_screen.dart';
 import 'package:remember/screens/notes_tab_screen.dart';
@@ -26,9 +30,13 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   void initState() {
-    widget.preSelected == null
-        ? selectedTab = 0
-        : selectedTab = widget.preSelected;
+    widget.preSelected == null ? selectedTab = 0 : selectedTab = widget.preSelected;
+    Provider.of<TodoProvider>(context, listen: false).getTaskList();
+    Provider.of<TodoProvider>(context, listen: false).getRandomQuote();
+
+    Provider.of<NoteProvider>(context, listen: false).getNotesList();
+
+    Provider.of<BirthdayProvider>(context, listen: false).getBirthList();
     super.initState();
   }
 
