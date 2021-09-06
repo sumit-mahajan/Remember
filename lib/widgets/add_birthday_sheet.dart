@@ -20,65 +20,59 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
   var formatter = new DateFormat('dd-MM-yyyy');
   FocusNode _nameNode = FocusNode();
   String? name;
-  DateTime? birthdate;
-  bool flag = false;
+  DateTime birthdate = DateTime.now();
   bool isLoading = false;
 
-  openDatePicker(BuildContext context) {
-    showDatePicker(
-        context: context,
-        initialDate: birthdate == null ? DateTime.now() : birthdate!,
-        firstDate: DateTime(1900),
-        lastDate: DateTime.now(),
-        builder: (BuildContext context, Widget? child) {
-          const MaterialColor buttonTextColor = const MaterialColor(
-            0xFF4A5BF6,
-            const <int, Color>{
-              50: const Color(0xFF4A5BF6),
-              100: const Color(0xFF4A5BF6),
-              200: const Color(0xFF4A5BF6),
-              300: const Color(0xFF4A5BF6),
-              400: const Color(0xFF4A5BF6),
-              500: const Color(0xFF4A5BF6),
-              600: const Color(0xFF4A5BF6),
-              700: const Color(0xFF4A5BF6),
-              800: const Color(0xFF4A5BF6),
-              900: const Color(0xFF4A5BF6),
-            },
-          );
-          return Theme(
-            data: ThemeData(
-                primarySwatch: buttonTextColor,
-                primaryColor: const Color(0xFF4A5BF6),
-                accentColor: const Color(0xFF4A5BF6)),
-            child: child!,
-          );
-        }).then((date) {
-      setState(() {
-        birthdate = date;
-      });
-    });
+  openDatePicker(BuildContext context) async {
+    birthdate = await showDatePicker(
+          context: context,
+          initialDate: birthdate,
+          firstDate: DateTime(1900),
+          lastDate: DateTime.now(),
+          builder: (BuildContext context, Widget? child) {
+            const MaterialColor buttonTextColor = const MaterialColor(
+              0xFF4A5BF6,
+              const <int, Color>{
+                50: const Color(0xFF4A5BF6),
+                100: const Color(0xFF4A5BF6),
+                200: const Color(0xFF4A5BF6),
+                300: const Color(0xFF4A5BF6),
+                400: const Color(0xFF4A5BF6),
+                500: const Color(0xFF4A5BF6),
+                600: const Color(0xFF4A5BF6),
+                700: const Color(0xFF4A5BF6),
+                800: const Color(0xFF4A5BF6),
+                900: const Color(0xFF4A5BF6),
+              },
+            );
+            return Theme(
+              data: ThemeData(
+                  primarySwatch: buttonTextColor,
+                  primaryColor: const Color(0xFF4A5BF6),
+                  accentColor: const Color(0xFF4A5BF6)),
+              child: child!,
+            );
+          },
+        ) ??
+        DateTime.now();
+    setState(() {});
   }
 
   _addBirthday() async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
-      if (birthdate != null) {
-        await Provider.of<BirthdayProvider>(context, listen: false)
-            .addBirthday(BirthdayModel(name: name, dateString: birthdate!.toIso8601String()));
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => TabsScreen(
-              preSelected: 2,
-            ),
+      int id = await Provider.of<BirthdayProvider>(context, listen: false)
+          .addBirthday(BirthdayModel(name: name!, dateofbirth: birthdate, dateString: birthdate.toIso8601String()));
+      Provider.of<BirthdayProvider>(context, listen: false).addBirthdayToFirebase(
+          BirthdayModel(id: id, name: name!, dateofbirth: birthdate, dateString: birthdate.toIso8601String()));
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => TabsScreen(
+            preSelected: 2,
           ),
-        );
-      } else {
-        flag = true;
-        setState(() {});
-      }
+        ),
+      );
     }
   }
 
@@ -132,8 +126,8 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        birthdate == null ? 'Please select Birthdate' : formatter.format(birthdate!),
-                        style: kBody1TextStyle.copyWith(color: birthdate == null && flag ? Colors.red : Colors.black),
+                        formatter.format(birthdate),
+                        style: kBody1TextStyle.copyWith(color: Colors.black),
                       ),
                       CustomButton(
                         text: 'Choose Date',

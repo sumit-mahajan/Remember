@@ -1,11 +1,11 @@
 class BirthdayModel {
   final int? id;
-  final String? name;
-  DateTime? dateofbirth;
-  final String? dateString;
+  final String name;
+  final DateTime dateofbirth;
+  final String dateString;
   late int days;
 
-  BirthdayModel({this.name, this.dateofbirth, this.id, this.dateString});
+  BirthdayModel({this.id, required this.name, required this.dateofbirth, required this.dateString});
 
   toMap() {
     return {
@@ -19,6 +19,7 @@ class BirthdayModel {
       id: map['id'],
       name: map['name'],
       dateString: map['dateString'],
+      dateofbirth: DateTime.parse(map['dateString']),
     );
   }
 }

@@ -1,9 +1,9 @@
 class TodoModel {
   int? id;
-  String? name;
-  bool? done;
+  String name;
+  bool done;
 
-  TodoModel({this.name, this.done, this.id});
+  TodoModel({this.id, required this.name, required this.done});
 
   TodoModel.from(TodoModel other)
       : name = other.name,

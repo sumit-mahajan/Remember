@@ -57,8 +57,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                       side: BorderSide(color: Colors.white),
                     ),
                     onPressed: () {
-                      if (newNote!.content != '' &&
-                          newNote!.content!.toLowerCase() != newNote!.content!.toUpperCase()) {
+                      if (newNote!.content != '' && newNote!.content.toLowerCase() != newNote!.content.toUpperCase()) {
                         if (widget.note == null) {
                           nProvider.insertNote(newNote!);
                         } else {

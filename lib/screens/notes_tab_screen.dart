@@ -146,7 +146,7 @@ class _NotesTabState extends State<NotesTab> {
                           child: Padding(
                             padding: EdgeInsets.all(10.r),
                             child: Text(
-                              notesList[index].content!,
+                              notesList[index].content,
                               style: kBody2TextStyle,
                               overflow: TextOverflow.ellipsis,
                             ),

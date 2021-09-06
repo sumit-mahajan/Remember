@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import 'package:remember/models/note_model.dart';
-import 'package:remember/services/database_service.dart';
+import 'package:remember/services/local_database_service.dart';
 
 class NoteProvider with ChangeNotifier {
   final LocalDbService localDbService;

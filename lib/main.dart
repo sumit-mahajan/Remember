@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:remember/providers/auth_provider.dart';
 import 'package:remember/providers/birthday_provider.dart';
 import 'package:remember/providers/note_provider.dart';
 import 'package:remember/providers/todo_provider.dart';
@@ -21,6 +21,9 @@ Future main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider<AuthProvider>(
+          create: (context) => locator<AuthProvider>(),
+        ),
         ChangeNotifierProvider<TodoProvider>(
           create: (context) => locator<TodoProvider>(),
         ),
@@ -29,10 +32,6 @@ Future main() async {
         ),
         ChangeNotifierProvider<BirthdayProvider>(
           create: (context) => locator<BirthdayProvider>(),
-        ),
-        StreamProvider<User?>(
-          initialData: null,
-          create: (context) => FirebaseAuth.instance.userChanges(),
         ),
       ],
       child: MyApp(),

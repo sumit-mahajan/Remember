@@ -1,13 +1,15 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:remember/locator.dart';
 import 'package:remember/providers/birthday_provider.dart';
 import 'package:remember/providers/note_provider.dart';
 import 'package:remember/providers/todo_provider.dart';
 import 'package:remember/screens/birthdays_tab_screen.dart';
-import 'package:remember/screens/events_tab_screen.dart';
+import 'package:remember/screens/accounts_tab_screen.dart';
 import 'package:remember/screens/notes_tab_screen.dart';
 import 'package:remember/screens/todo_tab_screen.dart';
+import 'package:remember/services/local_notification_service.dart';
 import 'package:remember/utilities/constants.dart';
 
 class TabsScreen extends StatefulWidget {
@@ -21,23 +23,42 @@ class TabsScreen extends StatefulWidget {
 
 class _TabsScreenState extends State<TabsScreen> {
   int? selectedTab;
+  LocalNotificationService notificationService = locator<LocalNotificationService>();
   List<Widget> tabsList = [
     ToDoTab(),
     NotesTab(),
     BirthdayTab(),
-    EventsTab(),
+    AccountsTab(),
   ];
 
   @override
   void initState() {
     widget.preSelected == null ? selectedTab = 0 : selectedTab = widget.preSelected;
-    Provider.of<TodoProvider>(context, listen: false).getTaskList();
-    Provider.of<TodoProvider>(context, listen: false).getRandomQuote();
+    // Fetch Todos and Quote
+    TodoProvider tProvider = Provider.of<TodoProvider>(context, listen: false);
+    tProvider.getTaskList();
+    tProvider.getRandomQuote();
+    if (tProvider.isFirstTime()) {
+      notificationService.scheduleDaily();
+    }
 
+    // Fetch Notes
     Provider.of<NoteProvider>(context, listen: false).getNotesList();
 
+    // Fetch Birthdays
     Provider.of<BirthdayProvider>(context, listen: false).getBirthList();
+
+    // Listen Notifications
+    listenNotifications();
     super.initState();
+  }
+
+  void listenNotifications() async {
+    notificationService.onNotification.stream.listen((payload) {
+      if (payload == 'birthday_reminder') {
+        selectedTab = 2;
+      }
+    });
   }
 
   @override

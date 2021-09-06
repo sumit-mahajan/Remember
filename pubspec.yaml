@@ -41,6 +41,8 @@ dependencies:
   cloud_firestore: ^2.5.1
   font_awesome_flutter: ^9.1.0
   flutter_local_notifications: ^8.1.1+2
+  rxdart: ^0.27.1
+  flutter_native_timezone: ^2.0.0
 
 dev_dependencies:
   flutter_test:

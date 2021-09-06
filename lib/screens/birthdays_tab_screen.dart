@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:remember/providers/auth_provider.dart';
 
 import 'package:remember/utilities/constants.dart';
 import 'package:remember/widgets/app_scaffold.dart';
@@ -39,6 +40,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
               onPressed: () {
                 Navigator.of(context).pop();
                 Provider.of<BirthdayProvider>(context, listen: false).deleteBirthdays();
+                Provider.of<BirthdayProvider>(context, listen: false).deleteBirthdaysFromFirebase();
               },
             )
           ],
@@ -81,10 +83,14 @@ class _BirthdayTabState extends State<BirthdayTab> {
                     size: 30.r,
                   ),
                   onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (context) => AddbirthdaySheet(),
-                    );
+                    if (Provider.of<AuthProvider>(context, listen: false).firebaseService.auth.currentUser == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Log in to add birthdays')));
+                    } else {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) => AddbirthdaySheet(),
+                      );
+                    }
                   },
                 ),
           childWidget: bProvider.birthList.length == 0
@@ -147,12 +153,12 @@ class _BirthdayTabState extends State<BirthdayTab> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      bProvider.todayList[i].name!,
+                                      bProvider.todayList[i].name,
                                       style: kBody1TextStyle,
                                     ),
                                     Text(
                                       'Turned ' +
-                                          (DateTime.now().year - bProvider.todayList[i].dateofbirth!.year).toString() +
+                                          (DateTime.now().year - bProvider.todayList[i].dateofbirth.year).toString() +
                                           ' years old',
                                       style: kSubtitleTextStyle,
                                     ),
@@ -229,7 +235,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        bProvider.laterBirthList[i].name!,
+                                        bProvider.laterBirthList[i].name,
                                         style: kBody1TextStyle,
                                       ),
                                       SizedBox(
@@ -237,7 +243,7 @@ class _BirthdayTabState extends State<BirthdayTab> {
                                       ),
                                       Text(
                                         'Birthdate: ' +
-                                            formatter.format(bProvider.laterBirthList[i].dateofbirth!).toString(),
+                                            formatter.format(bProvider.laterBirthList[i].dateofbirth).toString(),
                                         style: kSubtitleTextStyle,
                                       ),
                                     ],

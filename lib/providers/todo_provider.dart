@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:remember/models/todo_model.dart';
-import 'package:remember/services/database_service.dart';
+import 'package:remember/services/local_database_service.dart';
 import 'package:remember/utilities/quotes.dart';
 
 class TodoProvider with ChangeNotifier {
@@ -24,7 +24,7 @@ class TodoProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> isFirstTime() async {
+  bool isFirstTime() {
     var isFirstTime = prefs.getBool('first_time');
     if (isFirstTime != null && !isFirstTime) {
       return false;
@@ -37,7 +37,7 @@ class TodoProvider with ChangeNotifier {
   void getDoneCount(List<TodoModel> itemList) {
     countDone = 0;
     for (int i = 0; i < itemList.length; i++) {
-      if (itemList[i].done!) {
+      if (itemList[i].done) {
         countDone++;
       }
     }

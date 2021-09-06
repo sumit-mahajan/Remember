@@ -1,8 +1,8 @@
 class NoteModel {
   int? id;
-  String? content;
+  String content;
 
-  NoteModel({this.id, this.content});
+  NoteModel({this.id, required this.content});
 
   toMap() {
     return {

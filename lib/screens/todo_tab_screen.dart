@@ -262,11 +262,10 @@ class _ToDoTabState extends State<ToDoTab> {
                                               children: <Widget>[
                                                 Icon(Icons.arrow_left),
                                                 Icon(
-                                                    tProvider.taskList[i].done!
+                                                    tProvider.taskList[i].done
                                                         ? Icons.check_box
                                                         : Icons.check_box_outline_blank,
-                                                    color:
-                                                        tProvider.taskList[i].done! ? Colors.green : Colors.blueGrey),
+                                                    color: tProvider.taskList[i].done ? Colors.green : Colors.blueGrey),
                                               ],
                                             ),
                                             SizedBox(width: 10.w),
@@ -274,10 +273,10 @@ class _ToDoTabState extends State<ToDoTab> {
                                             // Task name
                                             Flexible(
                                               child: Text(
-                                                currentitem.name!,
+                                                currentitem.name,
                                                 style: kBody1TextStyle.copyWith(
                                                   decoration:
-                                                      tProvider.taskList[i].done! ? TextDecoration.lineThrough : null,
+                                                      tProvider.taskList[i].done ? TextDecoration.lineThrough : null,
                                                 ),
                                                 overflow: TextOverflow.ellipsis,
                                               ),
