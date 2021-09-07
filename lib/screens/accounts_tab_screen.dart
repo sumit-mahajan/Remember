@@ -1,9 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:remember/providers/auth_provider.dart';
+import 'package:remember/utilities/constants.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:remember/widgets/app_scaffold.dart';
+import 'package:remember/widgets/custom_button.dart';
 
 class AccountsTab extends StatefulWidget {
   @override
@@ -13,76 +17,119 @@ class AccountsTab extends StatefulWidget {
 class _AccountsTabState extends State<AccountsTab> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProvider>(builder: (context, aProvider, child) {
-      if (aProvider.firebaseService.auth.currentUser != null) {
-        //TODO: Show Profile
-        return AppScaffold(
-          title: 'Account',
-          childWidget: Column(
-            children: [
-              Text('Signed In'),
-              TextButton(
-                child: Text(
-                  'Logout',
-                  style: TextStyle(),
+    return Consumer<AuthProvider>(
+      builder: (context, aProvider, child) {
+        if (aProvider.firebaseService.auth.currentUser != null) {
+          User _user = aProvider.firebaseService.auth.currentUser!;
+          // Image.network(_user.photoURL!)
+          return AppScaffold(
+            title: 'Account',
+            childWidget: Column(
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 5,
                 ),
-                onPressed: () {
-                  aProvider.logout();
-                },
-              ),
-            ],
-          ),
-        );
-      }
-      if (aProvider.state == AuthState.loading) {
-        return AppScaffold(
-          title: 'Account',
-          childWidget: Column(
-            children: [
-              SizedBox(height: 50, width: 50, child: CircularProgressIndicator()),
-            ],
-          ),
-        );
-      }
-      return AppScaffold(
-        title: 'Account',
-        childWidget: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              child: ElevatedButton.icon(
-                icon: FaIcon(
-                  FontAwesomeIcons.google,
-                  color: Colors.red,
+                CircleAvatar(
+                  radius: 50.r,
+                  backgroundColor: Colors.transparent,
+                  child: Image.asset('assets/profile_icon.png'),
                 ),
-                label: Text('Sign In with Google'),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.blue.shade50,
-                  onPrimary: Colors.lightBlue,
-                  minimumSize: Size(
-                    double.infinity,
-                    50,
+                SizedBox(
+                  height: 10.h,
+                ),
+                Text(
+                  _user.displayName!,
+                  style: kBody2TextStyle,
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                Text(
+                  _user.email!,
+                  style: kBody1TextStyle,
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15.r),
+                  child: CustomButton(
+                    text: 'Logout',
+                    onClick: () {
+                      aProvider.logout();
+                    },
                   ),
                 ),
-                onPressed: () {
-                  aProvider.login();
-                },
-              ),
+                // TextButton(
+                //   child: Text(
+                //     'Logout',
+                //     style: TextStyle(),
+                //   ),
+                //   onPressed: () {
+                //     aProvider.logout();
+                //   },
+                // ),
+              ],
             ),
-            SizedBox(height: 50),
-            aProvider.state == AuthState.error
-                ? Text(
-                    'Something went wrong',
-                    style: TextStyle(
-                      color: Colors.red,
+          );
+        }
+        if (aProvider.state == AuthState.loading) {
+          return AppScaffold(
+            title: 'Account',
+            childWidget: Column(
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 3,
+                ),
+                SizedBox(height: 50.h, width: 50.w, child: CircularProgressIndicator()),
+              ],
+            ),
+          );
+        }
+        return AppScaffold(
+          title: 'Account',
+          childWidget: Column(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 3,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15.r),
+                child: ElevatedButton.icon(
+                  icon: FaIcon(
+                    FontAwesomeIcons.google,
+                    color: Colors.red,
+                  ),
+                  label: Text(
+                    'Sign In with Google',
+                    style: kBody1TextStyle.copyWith(fontWeight: FontWeight.w300),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.white70,
+                    onPrimary: Colors.black,
+                    minimumSize: Size(
+                      double.infinity,
+                      50.h,
                     ),
-                  )
-                : Container(),
-          ],
-        ),
-      );
-    });
+                  ),
+                  onPressed: () {
+                    aProvider.login();
+                  },
+                ),
+              ),
+              SizedBox(height: 20.h),
+              aProvider.state == AuthState.error
+                  ? Text(
+                      'Something went wrong',
+                      style: TextStyle(
+                        color: Colors.red,
+                      ),
+                    )
+                  : Container(),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

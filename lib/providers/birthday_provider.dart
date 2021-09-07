@@ -4,18 +4,24 @@ import 'package:remember/models/birthday_model.dart';
 import 'package:remember/services/firebase_service.dart';
 import 'package:remember/services/local_database_service.dart';
 import 'package:remember/services/local_notification_service.dart';
+import 'package:uuid/uuid.dart';
 
 class BirthdayProvider with ChangeNotifier {
+  final Uuid uuid;
   final LocalDbService localDbService;
   final FirebaseService firebaseService;
   final LocalNotificationService notificationService;
 
-  BirthdayProvider({required this.localDbService, required this.firebaseService, required this.notificationService});
+  BirthdayProvider(
+      {required this.uuid,
+      required this.localDbService,
+      required this.firebaseService,
+      required this.notificationService});
 
   bool isLoading = false;
   bool selectionMode = false;
   List<int> selectedIndexList = [];
-  List<int> fSelectedIndexList = [];
+  List<String> fSelectedIDList = [];
   List<BirthdayModel> birthList = [];
   List<BirthdayModel> todayList = [];
   List<BirthdayModel> laterBirthList = [];
@@ -67,25 +73,41 @@ class BirthdayProvider with ChangeNotifier {
     sortLater();
   }
 
-  Future<int> addBirthday(BirthdayModel _birthday) async {
+  Future<BirthdayModel> addBirthday(BirthdayModel _birthday) async {
     isLoading = true;
     notifyListeners();
+    _birthday.bid = uuid.v4();
     int id = await localDbService.insertBirthday(_birthday);
-    // await notificationService.scheduleYearly(
-    //   _birthday.id!,
-    //   _birthday.name,
-    //   'Wish ' +
-    //       _birthday.name +
-    //       ' on their ' +
-    //       (DateTime.now().year - _birthday.dateofbirth.year).toString() +
-    //       'th birthday',
-    //   'birthday_reminder',
-    //   _birthday.dateofbirth,
-    // );
+    _birthday.id = id;
+    DateTime scheduleDate = DateTime(DateTime.now().year, _birthday.dateofbirth.month, _birthday.dateofbirth.day);
+    await notificationService.scheduleYearly(
+      id,
+      'Today we have a birthday!',
+      'Wish ' +
+          _birthday.name +
+          ' on their ' +
+          (DateTime.now().year - _birthday.dateofbirth.year).toString() +
+          'th birthday',
+      'birthday_reminder',
+      scheduleDate,
+    );
+    if (_birthday.notifyBefore) {
+      await notificationService.scheduleYearly(
+        id,
+        'Early reminder for a birthday!',
+        '1 Day to go for ' +
+            _birthday.name +
+            "'s " +
+            (DateTime.now().year - _birthday.dateofbirth.year).toString() +
+            'th birthday',
+        'birthday_reminder',
+        scheduleDate.subtract(Duration(days: 1)),
+      );
+    }
     getBirthList();
     isLoading = false;
     notifyListeners();
-    return id;
+    return _birthday;
   }
 
   Future addBirthdayToFirebase(BirthdayModel birthday) async {
@@ -96,9 +118,11 @@ class BirthdayProvider with ChangeNotifier {
     isLoading = true;
     notifyListeners();
     selectedIndexList.sort();
-    fSelectedIndexList = selectedIndexList;
+    fSelectedIDList = [];
     for (int i in selectedIndexList) {
+      fSelectedIDList.add(laterBirthList[i].bid!);
       await localDbService.deleteBirth(laterBirthList[i].id);
+      await notificationService.cancelBirthdayNotification(laterBirthList[i].id!);
     }
     changeSelectionMode(false, -1);
     getBirthList();
@@ -107,15 +131,40 @@ class BirthdayProvider with ChangeNotifier {
   }
 
   Future deleteBirthdaysFromFirebase() async {
-    for (int i in selectedIndexList) {
-      await firebaseService.deleteBirthday(laterBirthList[i]);
+    for (String bid in fSelectedIDList) {
+      await firebaseService.deleteBirthday(bid);
     }
-    fSelectedIndexList.clear();
+    fSelectedIDList.clear();
   }
 
   Future setLocalData(List<BirthdayModel> remoteBirthList) async {
-    for (int i = 0; i < remoteBirthList.length; i++) {
-      await localDbService.insertBirthday(remoteBirthList[i]);
+    for (BirthdayModel _birthday in remoteBirthList) {
+      int id = await localDbService.insertBirthday(_birthday);
+      DateTime scheduleDate = DateTime(DateTime.now().year, _birthday.dateofbirth.month, _birthday.dateofbirth.day);
+      await notificationService.scheduleYearly(
+        id,
+        'Today we have a birthday!',
+        'Wish ' +
+            _birthday.name +
+            ' on their ' +
+            (DateTime.now().year - _birthday.dateofbirth.year).toString() +
+            'th birthday',
+        'birthday_reminder',
+        scheduleDate,
+      );
+      if (_birthday.notifyBefore) {
+        await notificationService.scheduleYearly(
+          id,
+          'Early reminder for a birthday!',
+          '1 Day to go for ' +
+              _birthday.name +
+              "'s " +
+              (DateTime.now().year - _birthday.dateofbirth.year).toString() +
+              'th birthday',
+          'birthday_reminder',
+          scheduleDate.subtract(Duration(days: 1)),
+        );
+      }
     }
     getBirthList();
   }
@@ -124,6 +173,7 @@ class BirthdayProvider with ChangeNotifier {
     for (int i = 0; i < birthList.length; i++) {
       await localDbService.deleteBirth(birthList[i].id);
     }
+    await notificationService.cancelAllNotifications();
     getBirthList();
   }
 }

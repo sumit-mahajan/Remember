@@ -20,7 +20,7 @@ class LocalNotificationService {
   }
 
   Future<void> initialize() async {
-    AndroidInitializationSettings _androidSettings = AndroidInitializationSettings("ic_launcher");
+    AndroidInitializationSettings _androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     IOSInitializationSettings _iosSettings = IOSInitializationSettings();
     final InitializationSettings _initSettings = InitializationSettings(
       android: _androidSettings,
@@ -39,6 +39,7 @@ class LocalNotificationService {
         'CHANNEL_DESCRIPTION',
         importance: Importance.max,
         priority: Priority.high,
+        playSound: true,
       ),
       iOS: IOSNotificationDetails(),
     );
@@ -49,7 +50,7 @@ class LocalNotificationService {
       0,
       'Good Morning',
       'What do you have on your mind today ?',
-      _daily(Time(11, 56)),
+      _daily(Time(8)),
       _notificationDetails,
       payload: 'Todo_reminder',
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
@@ -81,7 +82,15 @@ class LocalNotificationService {
   tz.TZDateTime _yearly(DateTime date) {
     final now = tz.TZDateTime.now(tz.local);
     final scheduleDate = tz.TZDateTime(tz.local, date.year, date.month, date.day, 0);
-    return scheduleDate.isBefore(now) ? tz.TZDateTime(tz.local, date.year + 1, date.month, date.day) : scheduleDate;
+    return scheduleDate.isBefore(now) ? tz.TZDateTime(tz.local, now.year + 1, date.month, date.day) : scheduleDate;
+  }
+
+  Future<void> cancelDailyNotification() async {
+    await _flutterLocalNotificationsPlugin.cancel(0);
+  }
+
+  Future<void> cancelBirthdayNotification(int id) async {
+    await _flutterLocalNotificationsPlugin.cancel(id);
   }
 
   Future<void> cancelAllNotifications() async {

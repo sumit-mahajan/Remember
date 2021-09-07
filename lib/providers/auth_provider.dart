@@ -31,9 +31,13 @@ class AuthProvider with ChangeNotifier {
   Future logout() async {
     try {
       _handleLoading();
+      for (BirthdayModel birthday in birthdayProvider.birthList) {
+        await firebaseService.addBirthday(birthday);
+      }
       await firebaseService.logout();
 
       await birthdayProvider.clearLocalData();
+
       _handleSuccess();
     } catch (err) {
       _handleError();

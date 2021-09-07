@@ -1,5 +1,4 @@
 import 'package:remember/providers/auth_provider.dart';
-import 'package:remember/services/firebase_notification_service.dart';
 import 'package:uuid/uuid.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,15 +20,14 @@ Future<void> init() async {
   locator.registerLazySingleton(() => AuthProvider(birthdayProvider: locator(), firebaseService: locator()));
   locator.registerLazySingleton(() => TodoProvider(localDbService: locator(), prefs: locator()));
   locator.registerLazySingleton(() => NoteProvider(localDbService: locator()));
-  locator.registerLazySingleton(
-      () => BirthdayProvider(localDbService: locator(), firebaseService: locator(), notificationService: locator()));
+  locator.registerLazySingleton(() => BirthdayProvider(
+      uuid: locator(), localDbService: locator(), firebaseService: locator(), notificationService: locator()));
 
   //Services
 
   locator.registerLazySingleton(() => LocalDbService());
   locator.registerLazySingleton(() => FirebaseService(auth: locator(), store: locator()));
   locator.registerLazySingleton(() => LocalNotificationService());
-  locator.registerLazySingleton(() => FirebaseNotificationService());
 
   //Variables
 

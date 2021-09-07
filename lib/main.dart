@@ -13,7 +13,7 @@ import 'package:remember/screens/add_note_screen.dart';
 import 'package:remember/screens/tabs_screen.dart';
 import 'package:remember/widgets/add_birthday_sheet.dart';
 
-Future main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await di.init();

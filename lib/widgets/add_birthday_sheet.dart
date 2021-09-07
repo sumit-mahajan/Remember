@@ -22,6 +22,7 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
   String? name;
   DateTime birthdate = DateTime.now();
   bool isLoading = false;
+  bool notifyBefore = true;
 
   openDatePicker(BuildContext context) async {
     birthdate = await showDatePicker(
@@ -61,10 +62,13 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
   _addBirthday() async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
-      int id = await Provider.of<BirthdayProvider>(context, listen: false)
-          .addBirthday(BirthdayModel(name: name!, dateofbirth: birthdate, dateString: birthdate.toIso8601String()));
-      Provider.of<BirthdayProvider>(context, listen: false).addBirthdayToFirebase(
-          BirthdayModel(id: id, name: name!, dateofbirth: birthdate, dateString: birthdate.toIso8601String()));
+      BirthdayModel _birthday = await Provider.of<BirthdayProvider>(context, listen: false).addBirthday(BirthdayModel(
+        name: name!,
+        dateofbirth: birthdate,
+        dateString: birthdate.toIso8601String(),
+        notifyBefore: notifyBefore,
+      ));
+      Provider.of<BirthdayProvider>(context, listen: false).addBirthdayToFirebase(_birthday);
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -99,6 +103,7 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
                 TextFormField(
                   autofocus: true,
                   focusNode: _nameNode,
+                  textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 0.h),
                     filled: true,
@@ -108,7 +113,7 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
                       borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
-                  onSaved: (value) {
+                  onChanged: (value) {
                     name = value;
                   },
                   validator: (input) {
@@ -119,9 +124,34 @@ class _AddbirthdaySheetState extends State<AddbirthdaySheet> {
                     }
                     return null;
                   },
+                  onFieldSubmitted: (value) {
+                    openDatePicker(context);
+                  },
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 15.h),
+                  padding: EdgeInsets.only(top: 15.h),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Checkbox(
+                          value: notifyBefore,
+                          onChanged: (value) {
+                            notifyBefore = value!;
+                            setState(() {});
+                          }),
+                      SizedBox(
+                        width: 5.r,
+                      ),
+                      Text(
+                        'Notify a day before',
+                        style: kBody1TextStyle.copyWith(color: Colors.black),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 15.h),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[

@@ -20,7 +20,7 @@ class LocalDbService {
           "CREATE TABLE noteTable (id INTEGER PRIMARY KEY autoincrement, content TEXT)",
         );
         await db.execute(
-          "CREATE TABLE birthTable (id INTEGER PRIMARY KEY autoincrement, name TEXT, dateString DATETIME)",
+          "CREATE TABLE birthTable (id INTEGER PRIMARY KEY autoincrement, bid TEXT, name TEXT, dateString DATETIME, notifyBefore BOOLEAN default 1)",
         );
       });
     }

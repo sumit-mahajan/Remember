@@ -57,16 +57,16 @@ class FirebaseService {
 
   Future<void> addBirthday(BirthdayModel birthday) async {
     try {
-      await store.doc('users/${auth.currentUser!.uid}/birthdays/${birthday.id}').set(birthday.toMap());
+      await store.doc('users/${auth.currentUser!.uid}/birthdays/${birthday.bid}').set(birthday.toMap());
     } catch (err) {
       print('Error at FirebaseDbService->addBirthday(): ' + err.toString());
       throw err.toString();
     }
   }
 
-  Future<void> deleteBirthday(BirthdayModel birthday) async {
+  Future<void> deleteBirthday(String bid) async {
     try {
-      await store.doc('users/${auth.currentUser!.uid}/birthdays/${birthday.id}').delete();
+      await store.doc('users/${auth.currentUser!.uid}/birthdays/$bid').delete();
     } catch (err) {
       print('Error at FirebaseDbService->deleteBirthday(): ' + err.toString());
       throw err.toString();

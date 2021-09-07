@@ -29,6 +29,7 @@ dependencies:
   intl: ^0.17.0
   get_it: ^7.2.0
   uuid: ^3.0.4
+  rxdart: ^0.27.1
   sqflite: ^2.0.0+4
   provider: ^6.0.0
   shared_preferences: ^2.0.7
@@ -41,7 +42,6 @@ dependencies:
   cloud_firestore: ^2.5.1
   font_awesome_flutter: ^9.1.0
   flutter_local_notifications: ^8.1.1+2
-  rxdart: ^0.27.1
   flutter_native_timezone: ^2.0.0
 
 dev_dependencies:
@@ -87,4 +87,5 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
   assets:
-    - assets/greentick1.jpg
+    - assets/todo_done.jpg
+    - assets/profile_icon.png

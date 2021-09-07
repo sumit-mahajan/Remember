@@ -33,14 +33,18 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   void initState() {
+    super.initState();
     widget.preSelected == null ? selectedTab = 0 : selectedTab = widget.preSelected;
     // Fetch Todos and Quote
     TodoProvider tProvider = Provider.of<TodoProvider>(context, listen: false);
     tProvider.getTaskList();
     tProvider.getRandomQuote();
-    if (tProvider.isFirstTime()) {
-      notificationService.scheduleDaily();
-    }
+
+    // Setup daily Notification
+    // if (tProvider.isFirstTime()) {
+    notificationService.cancelDailyNotification();
+    notificationService.scheduleDaily();
+    // }
 
     // Fetch Notes
     Provider.of<NoteProvider>(context, listen: false).getNotesList();
@@ -50,7 +54,6 @@ class _TabsScreenState extends State<TabsScreen> {
 
     // Listen Notifications
     listenNotifications();
-    super.initState();
   }
 
   void listenNotifications() async {
@@ -88,7 +91,7 @@ class _TabsScreenState extends State<TabsScreen> {
             color: selectedTab == 2 ? Colors.white : Colors.black,
           ),
           Icon(
-            Icons.calendar_today,
+            Icons.person,
             size: 30,
             color: selectedTab == 3 ? Colors.white : Colors.black,
           ),

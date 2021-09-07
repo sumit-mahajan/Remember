@@ -24,8 +24,8 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
 
   @override
   void initState() {
-    widget.note != null ? newNote = widget.note : newNote = NoteModel(content: '');
     super.initState();
+    widget.note != null ? newNote = widget.note : newNote = NoteModel(content: '');
   }
 
   @override
