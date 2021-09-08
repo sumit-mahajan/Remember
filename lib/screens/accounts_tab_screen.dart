@@ -60,15 +60,6 @@ class _AccountsTabState extends State<AccountsTab> {
                     },
                   ),
                 ),
-                // TextButton(
-                //   child: Text(
-                //     'Logout',
-                //     style: TextStyle(),
-                //   ),
-                //   onPressed: () {
-                //     aProvider.logout();
-                //   },
-                // ),
               ],
             ),
           );
@@ -78,8 +69,11 @@ class _AccountsTabState extends State<AccountsTab> {
             title: 'Account',
             childWidget: Column(
               children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 3,
+                Container(
+                  width: double.infinity,
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height / 3,
+                  ),
                 ),
                 SizedBox(height: 50.h, width: 50.w, child: CircularProgressIndicator()),
               ],

@@ -26,6 +26,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
   void initState() {
     super.initState();
     widget.note != null ? newNote = widget.note : newNote = NoteModel(content: '');
+    _focusNode.requestFocus();
   }
 
   @override
@@ -49,7 +50,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                   height: 0,
                   child: OutlinedButton(
                     child: Text(
-                      widget.note == null ? 'Add' : 'Edit',
+                      'Save',
                       style: kBody1TextStyle.copyWith(color: Colors.white),
                     ),
                     style: OutlinedButton.styleFrom(

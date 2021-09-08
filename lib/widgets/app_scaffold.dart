@@ -13,7 +13,7 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return Column(
       children: <Widget>[
         Padding(
           padding: EdgeInsets.all(15.r),
@@ -34,16 +34,17 @@ class AppScaffold extends StatelessWidget {
             ],
           ),
         ),
-        Container(
-          height: MediaQuery.of(context).size.height - 157.h,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(20.r), topRight: Radius.circular(20.r)),
-          ),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.all(title == 'ToDo' ? 15.r : 0),
-              child: childWidget ?? Container(),
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(20.r), topRight: Radius.circular(20.r)),
+            ),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(title == 'ToDo' ? 15.r : 0),
+                child: childWidget ?? Container(),
+              ),
             ),
           ),
         ),

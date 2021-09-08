@@ -106,7 +106,7 @@ class _TabsScreenState extends State<TabsScreen> {
         ),
         animationCurve: Curves.bounceInOut,
       ),
-      body: tabsList[selectedTab!],
+      body: SafeArea(child: tabsList[selectedTab!]),
     );
   }
 }
